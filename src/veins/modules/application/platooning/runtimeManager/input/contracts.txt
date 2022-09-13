@@ -1,0 +1,141 @@
+################################################# RM CONTRACT ########################################################
+#                                                                                                                    #
+# This is the input file to specify Contracts for Runtime Manager                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# Rules :                                                                                                            #
+#       * Anything following # in a line will be regarded as comments                                                #
+#       * To make the parser simpler, only small case will be considered                                             #
+#       * spaces between word, word and [,],:,; are optional                                                         #
+#                                                                                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# Format for Contract :                                                                                              #
+#                    ::contract[Type : comma/space separated Assumptions : comma/space separated Guarantees]         #
+#                                                                                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# Type : Type is read as name=value pair                                                                             #
+#      * Required only one type=value                                                                                #
+#                                                                                                                    #
+#          Type Pair's name and value                                                                                #
+#       -------------------------------                                                                              #
+#       name                      value                                                                              #
+#       ----                      -----                                                                              #
+#       ctype                     wifi                                                                               #
+#                                                                                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# Assumption : Assumptions are read as name=value pair                                                               #
+#      * Must provide all parameters (name=value)                                                                    #
+#      * In case of multiple assumptions, pairs are separated using any combination of comma and space               #
+#      * At least one comma or space required between two assumptions                                                #
+#      * Pair's orders are: c2f=value ; c2l=value ; mode=value                                                       #
+#                                                                                                                    #
+#          Assumption Pair's name and value                                                                          #
+#       -------------------------------------                                                                        #
+#       name                      value                                                                              #
+#       ----                      -----                                                                              #
+#       c2f                       ok/poor/critical                                                                   #
+#       c2l                       ok/poor/critical                                                                   #
+#       mode                      acc/ploeg/cacc                                                                     #
+#                                                                                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# Guarantee : Guarantees are read as name=value pair                                                                 #
+#      * Must provide at least one parameters (name=value)                                                           #
+#      * In case of multiple guarantees, pairs are separated using any combination of comma and space                #
+#      * At least one comma or space required between two guarantees                                                 #
+#      * Pair's orders are: transition2mode=value ; dist2pred=value                                                  #
+#                                                                                                                    #
+#        Guarantee Pair's name and value                                                                             #
+#       -----------------------------------                                                                          #
+#       name                      value                                                                              #
+#       ----                      -----                                                                              #
+#       transition2mode           acc/ploeg/cacc                                                                     #
+#       dist2pred                 default/increase                                                                   #
+#                                                                                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# HINTS: Choose any of the following three possible format, change to any possible value of parameter as you want    #
+#      * ::contract[ctype=value : c2f=value ; c2l=value; mode=value : transition2mode=value]                         #
+#      * ::contract[ctype=value : c2f=value ; c2l=value; mode=value : dist2pred=value]                               #
+#      * ::contract[ctype=value : c2f=value ; c2l=value; mode=value : transition2mode=value ; dist2pred=value]       #
+#                                                                                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# EXAMPLES:                                                                                                          #
+# Example 1:                                                                                                         #
+#      ::contract[ctype=wifi : c2f=ok ; c2l=ok ; mode=acc : transition2mode=cacc]                                    #
+# Example 2:                                                                                                         #
+#      ::contract[ctype=wifi : c2f=ok ; c2l=critical ; mode=cacc : transition2mode=acc]                              #
+# Example 3:                                                                                                         #
+#      ::contract[ctype=wifi : c2f=ok  c2l=poor  mode=cacc : dist2pred=increase]                                     #
+# Example 4:                                                                                                         #
+#      ::contract[ctype=wifi : c2f=poor ; c2l=ok ; mode=cacc : transition2mode=ploeg ; dist2pred=increase]           #
+#                                                                                                                    #
+# ------------------------------------------------------------------------------------------------------------------ #
+#                                                                                                                    #
+# NOTE:                                                                                                              #
+#      * value for mode and transitionTomode in a contract should not be same                                        #
+#                                                                                                                    #
+######################################################################################################################
+
+############### Test Start ##############
+# ::contract[type : comma/space separated assumptions : comma/space separated guarantees]
+#::contract[ctype=wifi :c2f=ok c2l=critical mode=cacc : transition2mode=acc]
+#::contract[ctype=wifi :c2f=ok ;c2l=poor ;mode=cacc : dist2pred=increase]
+#::contract[ctype=wifi :c2f=poor   ;;;  ;c2l=ok;    mode=cacc  :::    transition2mode=ploeg     ;dist2pred=increase  ]
+#::contract[ ctype=wifi :c2f=poor   ;;;  ;c2l=ok;    mode=cacc  :::    transition2mode=ploeg     ;dist2pred= default  ]
+
+#::contract[ctype=wifi:c2f=ok; c2l=ok; mode=acc : transition2mode=cacc; dist2pred=default]
+
+#::contract[ctype=wifi : c2f=ok ; c2l=ok; mode=acc : transition2mode=cacc]
+#::contract[ctype=wifi : c2f=critical  c2l=poor  mode=cacc : dist2pred=increase]
+#::contract[ctype=wifi : c2f=poor ; c2l=critical ; mode=cacc : transition2mode=ploeg ; dist2pred=default]
+############### Test  End ##############
+
+######################### Contracts for Runtime Manager ########################
+############### uppgrade ###############
+############### acc -> ploeg
+::contract[ctype=wifi : c2f=ok ; c2l=critical; mode=acc : transition2mode=ploeg]            
+############### acc->cacc
+::contract[ctype=wifi : c2f=ok ; c2l=ok; mode=acc : transition2mode=cacc]            
+############### ploeg->cacc
+::contract[ctype=wifi : c2f=ok ; c2l=ok; mode=ploeg : transition2mode=cacc]            
+
+############### degrade ###############
+############### ploeg->acc
+::contract[ctype=wifi : c2f=critical ; c2l=ok; mode=ploeg : transition2mode=acc] 
+::contract[ctype=wifi : c2f=critical ; c2l=poor; mode=ploeg : transition2mode=acc]            
+::contract[ctype=wifi : c2f=critical ; c2l=critical; mode=ploeg : transition2mode=acc]                       
+############### cacc->ploeg
+::contract[ctype=wifi : c2f=ok ; c2l=critical; mode=cacc : transition2mode=ploeg]            
+############### cacc->acc
+::contract[ctype=wifi : c2f=critical ; c2l=ok; mode=cacc : transition2mode=acc] 
+::contract[ctype=wifi : c2f=critical ; c2l=poor; mode=cacc : transition2mode=acc]            
+::contract[ctype=wifi : c2f=critical ; c2l=critical; mode=cacc : transition2mode=acc]
+
+############### gapcontrol ###############
+############### acc->ploeg->gapControl
+::contract[ctype=wifi : c2f=poor ; c2l=ok ; mode=acc : transition2mode=ploeg ; dist2pred=increase]
+::contract[ctype=wifi : c2f=poor ; c2l=poor ; mode=acc : transition2mode=ploeg ; dist2pred=increase]
+::contract[ctype=wifi : c2f=poor ; c2l=critical ; mode=acc : transition2mode=ploeg ; dist2pred=increase]
+############### acc->cacc->gapControl
+::contract[ctype=wifi : c2f=ok ; c2l=poor ; mode=acc : transition2mode=cacc ; dist2pred=increase]
+
+############### ploeg->gapControl
+::contract[ctype=wifi : c2f=ok  c2l=critical  mode=ploeg : dist2pred=default]
+::contract[ctype=wifi : c2f=poor  c2l=ok  mode=ploeg : dist2pred=increase]
+::contract[ctype=wifi : c2f=poor  c2l=poor  mode=ploeg : dist2pred=increase]
+::contract[ctype=wifi : c2f=poor  c2l=critical  mode=ploeg : dist2pred=increase]
+############### ploeg->cacc->gapControl
+::contract[ctype=wifi : c2f=ok ; c2l=poor ; mode=ploeg : transition2mode=cacc ; dist2pred=increase]
+
+############### cacc->gapControl
+::contract[ctype=wifi : c2f=ok  c2l=ok  mode=cacc : dist2pred=default]
+::contract[ctype=wifi : c2f=ok  c2l=poor  mode=cacc : dist2pred=increase]
+############### cacc->ploeg->gapControl
+::contract[ctype=wifi : c2f=poor ; c2l=ok ; mode=cacc : transition2mode=ploeg ; dist2pred=increase]
+::contract[ctype=wifi : c2f=poor ; c2l=poor ; mode=cacc : transition2mode=ploeg ; dist2pred=increase]
+::contract[ctype=wifi : c2f=poor ; c2l=critical ; mode=cacc : transition2mode=ploeg ; dist2pred=increase]
