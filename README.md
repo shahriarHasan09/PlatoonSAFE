@@ -121,7 +121,8 @@ steps to have a working version of PlatoonSAFE in Ubuntu:
     buttons. This should start the simulation, and a SUMO window should
     pop-up. At this point, you should see the platooning vehicles.
 
-10. opp_run -m -u Qtenv -c RTM-SB-SVR -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins RTMModule.ini
+10. 
+        opp_run -m -u Qtenv -c RTM-SB-SVR -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins RTMModule.ini
 
 Please note that running the simulation in GUI has been instructed
 above. However, in order to run large scale parallel simulations, you
@@ -224,7 +225,7 @@ explained below:
 
 -   Lines 24-28: In the paper, we mention three controllers, ACC, CACC,
     and PLATOON, and there is a clear distinction between the CACC and
-    PLATOON controllers [@caccvsplatooning]. In the Plexe simulator, the
+    PLATOON controllers[^7]. In the Plexe simulator, the
     ACC, CACC, and PLATOON controllers (as termed in the PlatoonSAFE
     paper) are called as ACC, Ploeg, and CACC, respectively. The time
     headway or distance gap of the controllers are read from the
@@ -332,7 +333,7 @@ member functions of `Assumption` class and the derived class
 directory\
 `runtimeManager/assumptions`.
 
-``` {#listing:assumption .c++ caption="{\\tt Assumption} and {\\tt WIFIAssumption} class" label="listing:assumption" language="C++"}
+``` cpp
 class Assumption {
 public:
     virtual void evaluate(parameter list);
@@ -366,7 +367,7 @@ packet loss from the front and lead vehicles, Listing
 reference="listing:wifi_quality"}. The C2L, C2F, `WIFI_QUALITY` can be
 found in the `runtimeManager/StateParameter*` directory.
 
-``` {#listing:wifi_quality .c++ caption="unscoped enum {\\tt WIFI\\_QUALITY}" label="listing:wifi_quality" language="C++"}
+``` cpp
 enum WIFI_QUALITY {
     CRITICAL,
     POOR,
@@ -405,7 +406,7 @@ performed by its base classes `ChangeController` and `AdjustGap2Front`.
 The classes associated with the guarantees can be found in the directory
 `runtimeManager/guarantees`.
 
-``` {#listing:contract_guarantee .c++ caption="{\\tt Guarantee} and the derived classes" label="listing:contract_guarantee" language="C++"}
+``` cpp
 enum class GAP2FRONT {
     DEFAULT,
     INCREASE,
@@ -492,20 +493,41 @@ c2f=value ; c2l=value ; mode=value
 transition2mode=value ; dist2pred=value
 ```
 
-width=,center
+<table>
+    <tr>
+        <td><b>Component</b></td>
+        <td><b>key</b></td>
+        <td><b>value</b></td>
+    </thead>
+    <tr>
+        <td><i>Type</i></td>
+        <td>ctype</td>
+        <td>wifi</td>
+    </tr>
+    <tr>
+        <td rowspan="3"><i>Assumption</i></td>
+        <td>c2f</td>
+        <td>ok/poor/critical</td>
+    </tr>
+    <tr>
+        <td>c2l</td>
+        <td>ok/poor/critical</td>
+    </tr>
+    <tr>
+        <td>mode</td>
+        <td>acc/ploeg/cacc</td>
+    </tr>
+    <tr>
+        <td rowspan="2"><i>Guaranteee</i></td>
+        <td>transition2mode</td>
+        <td>acc/ploeg/cacc</td>
+    </tr>
+    <tr>
+        <td>dist2pred</td>
+        <td>default/increase</td>
+    </tr>
+</table>
 
-::: {#table:contract_input_key_value}
-  **Component**   **key**           **value**
-  --------------- ----------------- ------------------
-  `Type`          ctype             wifi
-                  c2f               ok/poor/critical
-                  c2l               ok/poor/critical
-                  mode              acc/ploeg/cacc
-                  transition2mode   acc/ploeg/cacc
-                  dist2pred         default/increase
-
-  : Available `keys` and associated `value` for user defined `Contract`
-:::
 
 Based on the rules defined above, there are two possible formats that a
 user can use to define their contracts, and it is depicted in Listing
@@ -604,3 +626,5 @@ Results collection and Analysis
 [^5]: https://doc.omnetpp.org/omnetpp/InstallGuide.pdf
 
 [^6]: https://doc.omnetpp.org/omnetpp/manual/
+
+[^7]: Steven E. Shladover, Christopher Nowakowski, Xiao-Yun Lu, and Robert Ferlis.Cooperative adaptive cruise control: Definitions and operating concepts. *Transportation Research Record*, 2489(1):145–152, 2015.
