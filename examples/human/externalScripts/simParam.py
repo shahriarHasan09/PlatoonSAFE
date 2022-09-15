@@ -116,6 +116,6 @@ opp_run = "opp_run{:s} "
 lib_flags = "-l {:s} "
 ned_flags = "-n {:s} "
 img_flags = "--image-path={:s} "
-omnetpp_args = "-m -u Cmdenv -c {:s} RTMModule.ini" #change configuration if necessary
+omnetpp_args = "-m -u Qtenv -c {:s} RTMModule.ini" #change configuration if necessary
 
 SUMOCMD = opp_run.format("") + lib_flags.format("../../src/veins") + ned_flags.format(".:../veins:../../src/veins") + img_flags.format("../../images") + "-r {:d} " + omnetpp_args.format("RTM-SB")
