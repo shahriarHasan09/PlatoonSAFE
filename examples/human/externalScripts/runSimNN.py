@@ -12,7 +12,7 @@ import time
 # Depending on the installation and location of OMNet++ and PlatoonSAFE project, directory locations may change.
 # To find the own directories, a simple way is to execute a simulation from OMNet++ for Cmdenv option (Change it in run configurations) and stop the simulation immediatly
 # A command similar to this one should be printed in OMNet++ terminal.
-SUMOCMD = "opp_run -r {:d} -m -u Qtenv -c RTM-SB-NN -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins --record-eventlog=false --cmdenv-stop-batch-on-error=false RTMModule.ini"
+SUMOCMD = "opp_run -r {:d} -m -u Cmdenv -c RTM-SB-NN -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins --record-eventlog=false --cmdenv-stop-batch-on-error=false RTMModule.ini"
 
 def runSimulation(seed):
     """
