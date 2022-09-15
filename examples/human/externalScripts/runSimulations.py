@@ -1,15 +1,19 @@
-# Main script for automate the execution of simulations to find optimal wait time in different scenarios
-# It must be copied and run in the file where omnetpp.ini is (src/plexe-veins-plexe-2.1/examples/safetyApps/)
+# -----------------------------------------------------------------------------------------------------
+# Main script to automate the execution of simulations
+#
+# Parameters are defined in simParam.py
+# Functions are defined in simUtils.py
+# -----------------------------------------------------------------------------------------------------
 
 import simParam
 import simUtils
 import itertools
 import csv
-import processResult
 import os
+import glob
 
-
-# "SB-nCars=7,platoonSize=7,nLanes=1,humanCars=10,humanLanes=3,caccSpacing=5,ploegH=0.5,controller=0,sController=ACC,headway=1.2,leaderHeadway=1.2,leaderSpeed=100,2,1.2-#0.vec"
+CONFIGURATION = "RTM-SB"
+BRAKE_TIME = 40 # Define brake time to compute braking time and travel distance
 
 def main():
     """
@@ -17,12 +21,6 @@ def main():
 
     Parameters (Defined in simParam)
     ----------
-    WTMAX and WTMIN : integer
-        Stablish limits for the search of optimal wt
-
-    WT_MAXTRIES : integer
-        Define how many runs should be done for each scenario.
-
     scenarios: array
         Define different scenarios for each input parameter 
 
@@ -33,11 +31,12 @@ def main():
 
     # Open csv and write header to write results on
     csvFile = open("output/simulationResults.csv", "a", encoding='UTF8', newline='')
+    
     try:
         writer = csv.writer(csvFile)
         writer.writerow(["ID", "scenario", "seed", "Controller", "numPlatCars",
                         "numHumanCars", "spdLeader", "BeaconIntervalPlat", "BeaconIntervalHuman", "DENMInterval", "DecelerationRate",
-                         "PacketSize", "Ctr_Param(Ploegh||Spacing)", "waitTime", "Collision"])
+                         "PacketSize", "Ctr_Param(Ploegh||Spacing)", "Collision", "TravelDistance", "TravelTime"])
         csvFile.close()
         simUtils.changeValue(
             simParam.CONTROLLER_SCN, simParam.CONTROLLER_LINE, simParam.CONTROLLER_STR)
@@ -53,10 +52,6 @@ def main():
 
         # Iterate among each specific scenario
         for (numCars, numHumanCars, spdLeadCar, beacint, beacinthum, decrate, packsize, ctr) in scenarios:
-            # Redefine initial state (waitTime, limits, tries)
-            waitTimeTop, waitTimeBot = simUtils.getWaitTimeLimits(numHumanCars, beacinthum)
-            waitTimeValue = waitTimeTop
-            waitTimeTries = 0
             collision = False
             numTestScenario += 1
 
@@ -82,42 +77,22 @@ def main():
             simUtils.changeValue(
                 ctr, ctr_line, ctr_str)
 
-            """ 
-			TODO: 
-				- Take into account more output parameters (breakDistance, breakTime...) TOBEDEFINED
-				- What if in MAXTRIES there is still collision?
-			"""
-            for waitTimeTries in range(simParam.WT_MAXTRIES):
+            # run simulations with different seed if needed
+            for seed in range(1):
 
-                waitTimeValue, waitTimeTop, waitTimeBot = simUtils.selectWaitTime(
-                    waitTimeValue, waitTimeTop, waitTimeBot, collision)
-                waitTimeTop = waitTimeTop
-                simUtils.changeValue(
-                    waitTimeValue, simParam.WAITTIME_LINE, simParam.WAITTIME_STR)
+                simUtils.runSimulation(seed)
+                numTest += 1
+                vector_file = glob.glob("../results/*{}*#{}.vec".format(CONFIGURATION, seed))
+                # Parse vector file into a csv and check for collision
+                collision, travel_distance, travel_time = simUtils.createResultCSV(vector_file[0], simParam.parse_file.format(simParam.CONTROLLER_SCN, numTest, numTestScenario, seed), BRAKE_TIME, numCars)
 
-                for seed in range(1):
+                os.system('rm -rf ../results/*')
 
-                    simUtils.runSimulation(seed)
-
-                    #waitTimeTries += 1
-                    numTest += 1
-                    """""""""""""""""""""""""""""""""""""""""
-					TODO process results file to get outputs.
-					For testing purpose, collision will be random
-					"""""""""""""""""""""""""""""""""""""""""
-                    collision = processResult.createResultCSV(simParam.vector_file.format(seed),
-                     simParam.parse_file.format(simParam.CONTROLLER_SCN, numTest, numTestScenario, waitTimeTries, seed))
-                    """"""""""""""""""""""""""""""""""""""""""
-                    os.system('rm -rf results/*')
-
-                    # Save results into csv
-
-                    if collision:
-                        break
+                # Save results into csv
                 csvFile = open("output/simulationResults.csv", "a", encoding='UTF8', newline='')
                 writer = csv.writer(csvFile)
                 writer.writerow([numTest, numTestScenario, seed, simParam.CONTROLLER_SCN, numCars, numHumanCars,
-                 spdLeadCar, beacint, beacinthum, beacint, decrate, packsize, ctr, round(waitTimeValue, 3), collision])
+                 spdLeadCar, beacint, beacinthum, beacint, decrate, packsize, ctr, collision, travel_distance, travel_time])
                 csvFile.close()
 
     finally:

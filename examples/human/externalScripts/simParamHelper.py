@@ -1,5 +1,11 @@
-import simParam
+# -----------------------------------------------------------------------------------------------------
+# Script that can be used to easyly get the lines on which specific parameters are configured.
+#
+# This information will be necessary to automatize simulations with runSimulations.py
+# Caution: Some parameters may be repeated in different configurations. Select only the configuration to run
+# -----------------------------------------------------------------------------------------------------
 
+# 1. Determine the original names of the parameters that you want to configure
 numCars = "**.numberOfCars "
 numCarPlat = "**.numberOfCarsPerPlatoon "
 numLanes = "**.numberOfLanes ="
@@ -18,14 +24,15 @@ brakeTime ="*.node[*].prot.brakeAtTime ="
 twait = "*.node[*].prot.sbWaitTime ="
 denmInt = "*.node[*].prot.DENMInterval"
 
-# opening a text file
-file1 = open("CEBModule.ini", "r")
+# 2. Identify the .ini file in which the parameters are configured
+file1 = open("../RTM-CEB-ML.ini", "r")
   
 # setting flag and index to 0
 flag = 0
 index = 0
   
 # Loop through the file line by line
+# Print the line where the parameter is configured
 for line in file1:  
     index += 1 
       
@@ -63,7 +70,7 @@ for line in file1:
     elif twait in line:
         print("twait found in line: ", index)
     elif denmInt in line:
-        print("brakeTime found in line: ", index)
+        print("DENMInterval found in line: ", index)
 
           
   

@@ -59,3 +59,7 @@ subprojects/veins_inet/examples/**/.tkenvrc
 subprojects/veins_inet/examples/**/.qtenvrc
 subprojects/veins_inet/examples/**/.cmdenv-log
 subprojects/veins_inet/examples/**/valgrind.out
+
+examples/human/externalScripts/__pycache__/*
+
+.settings/language.settings.xml
