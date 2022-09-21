@@ -159,6 +159,8 @@ Runtime Manager parameters inherits the parameters of `omnetpp.ini`
 file, Listing [\[rmModule\]](#rmModule){reference-type="ref"
 reference="rmModule"}.
 
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTMModule.ini#L1-L43
+
 ``` javascript {.line-numbers}
 include omnetpp.ini
 *.node[*].runtimeManager.rmEnabled = true
@@ -166,11 +168,9 @@ include omnetpp.ini
 *.node[*].runtimeManager.expectedBeconInterval = .105 s
 *.node[*].runtimeManager.readContractsFromInputFile = false
 *.node[*].runtimeManager.contractInputFilename  =  
-"/home/shahriar/plexe-veins-plexe-2.1/src/veins/modules/
-application/platooning/runtimeManager/input/contracts.txt"
+"/home/shahriar/plexe-veins-plexe-2.1/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt"
 *.node[*].runtimeManager.outputFilename = 
-"/home/shahriar/plexe-veins-plexe-2.1/src/veins/modules/
-application/platooning/runtimeManager/output/output"
+"/home/shahriar/plexe-veins-plexe-2.1/src/veins/modules/application/platooning/runtimeManager/output/output"
 *.node[*].runtimeManager.write2file = true
 
 *.node[*].runtimeManager.nPacketLossPoor = 3
