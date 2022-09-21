@@ -375,6 +375,8 @@ packet loss from the front and lead vehicles, Listing
 reference="listing:wifi_quality"}. The C2L, C2F, `WIFI_QUALITY` can be
 found in the `runtimeManager/StateParameter*` directory.
 
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/StateParameter.h#L23-L27
+
 ``` cpp
 enum WIFI_QUALITY {
     CRITICAL,
@@ -467,31 +469,15 @@ user defines their own contracts they need to set the
 `readContractFromInputFile` parameter in the `RMModule.ini` file to
 `true`; in that case, the default contracts will be ignored.
 
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt#L13-L14
+
 ``` {#listing:contract_format numbers="none" caption="Input format for user defined {\\tt Contract}" label="listing:contract_format"}
 ::contract[Type : comma/space separated Assumption variables : 
 comma/space separated Guarantee variables]
 ```
 
 The input format of a user defined contract is depicted in Listing
-[\[listing:contract\_format\]](#listing:contract_format){reference-type="ref"
-reference="listing:contract_format"}. The components of `Contract`,
-`Type`, `Assumption`, and `Guarantee` are defined as a collection of
-`key` and `value` pair. The keys and their corresponding values
-available in the current PlatoonSAFE implementation are depicted in
-Table [1](#table:contract_input_key_value){reference-type="ref"
-reference="table:contract_input_key_value"}. For instance, the
-components of Assumption are as Listing
-[\[listing:contract\_assumption\_order\]](#listing:contract_assumption_order){reference-type="ref"
-reference="listing:contract_assumption_order"}, and their corresponding
-values are to be chosen from the Table
-[1](#table:contract_input_key_value){reference-type="ref"
-reference="table:contract_input_key_value"}. Similarly, the components
-of the Guarantee are depicted in Listing
-[\[listing:contract\_guarantee\_order\]](#listing:contract_guarantee_order){reference-type="ref"
-reference="listing:contract_guarantee_order"}, and the values should be
-chosen from the Guarantee row of Table
-[1](#table:contract_input_key_value){reference-type="ref"
-reference="table:contract_input_key_value"}.
+X. The components of `Contract`, `Type`, `Assumption`, and `Guarantee` are defined as a collection of `key` and `value` pair. The keys and their corresponding values available in the current PlatoonSAFE implementation are depicted in Table X. For instance, the components of Assumption are as Listing X, and their corresponding values are to be chosen from the Table X. Similarly, the components of the Guarantee are depicted in Listing X, and the values should be chosen from the Guarantee row of Table X.
 
 ``` {#listing:contract_assumption_order numbers="none" caption="Order of pairs of {\\tt Assumption} component" label="listing:contract_assumption_order"}
 c2f=value ; c2l=value ; mode=value
@@ -537,12 +523,9 @@ transition2mode=value ; dist2pred=value
 </table>
 
 
-Based on the rules defined above, there are two possible formats that a
-user can use to define their contracts, and it is depicted in Listing
-[\[listing:contract\_option\]](#listing:contract_option){reference-type="ref"
-reference="listing:contract_option"}. The first format is to be used
-when one of the guarantees is provided, and the second one is to be used
-when both the guarantees are provided.
+Based on the rules defined above, there are two possible formats that a user can use to define their contracts, and it is depicted in Listing X. The first format is to be used when one of the guarantees is provided, and the second one is to be used when both the guarantees are provided.
+
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt#L61-L62
 
 ``` {#listing:contract_option caption="Two possible combination of {\\tt Contract} input format" label="listing:contract_option"}
 ::contract[ctype=value : c2f=value ; c2l=value; mode=value : transition2mode=value]
