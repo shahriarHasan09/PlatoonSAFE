@@ -121,8 +121,8 @@ make MODE=release
     PlatoonSAFE-1.1 $\rightarrow$ set active $\rightarrow$ gcc-release).
 
 9.  Now go to PlatoonSAFE $\rightarrow$ examples $\rightarrow$
-    safetyApps, and run `RMModule.ini`. In order to run it, right click
-    on `RMModule.ini` $\rightarrow$ Run As $\rightarrow$ OMNeT++
+    safetyApps, and run [`RMModule.ini`](/examples/human/RMModule.ini). In order to run it, right click
+    on [`RMModule.ini`](/examples/human/RMModule.ini) $\rightarrow$ Run As $\rightarrow$ OMNeT++
     Simulation. An window should pop-up, select Sinusoidal in the Config
     name and 2 in Run number, and press OK. On the left-top corner of
     the OMNeT++ Qtenv window, click on either of the fast or express
@@ -142,7 +142,7 @@ In this section, the parameters used to simulate the fail-operational and fail-s
 Runtime Manager parameters
 --------------------------
 
-The parameters of Plexe simulator that specifies the PHY and MAC layer specifications, neighbouring traffic, beacon frequencies, controller parameters, and the simulated scenarios, are available in the `omnetpp.ini` file. Please refer to the Plexe documentation for the details of these parameters. The `RMModule.ini` file that specifies the Runtime Manager parameters inherits the parameters of `omnetpp.ini` file, Listing X.
+The parameters of Plexe simulator that specifies the PHY and MAC layer specifications, neighbouring traffic, beacon frequencies, controller parameters, and the simulated scenarios, are available in the `omnetpp.ini` file. Please refer to the Plexe documentation for the details of these parameters. The [`RMModule.ini`](/examples/human/RMModule.ini) file that specifies the Runtime Manager parameters inherits the parameters of `omnetpp.ini` file, Listing X.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTMModule.ini#L1-L43
 
@@ -274,9 +274,7 @@ execute.
 Implementation details of Runtime Manager
 =========================================
 
-The code of the Runtime Manager can be found in the directory\
-$src/veins/modules/application/platooning/runtimeManager$.\
-The Runtime Manager is implemented as a separate module in the Plexe
+The code of the Runtime Manager can be found in the directory [runtimeManager](src/veins/modules/application/platooning/runtimeManager). The Runtime Manager is implemented as a separate module in the Plexe
 simulation framework. platooning application can access to it through
 the `onPlatoonBeacon()` method of the `Runtime Manager` interface. This
 method is called from platooning application every time a vehicle
@@ -298,8 +296,7 @@ information are then processed in safety evaluation step and reported to
 an output file if distance to the front vehicle or maximum deceleration
 violate the user defined threshold values. The methods implementing the
 logging, evaluating, monitoring, and scheduling tasks can be found in
-the `runtimeManager.cc` file. Moreover, in the *runtimeManager.\**
-class, vehicle colors are set to demonstrate the active controller
+the [`RuntimeManager.cc`](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) file. Moreover, in the *runtimeManager.\** class, vehicle colors are set to demonstrate the active controller
 employed in a vehicle that can be seen in the SUMO GUI.
 
 Assumption/Guarantee
@@ -316,7 +313,7 @@ state of the ego vehicle.
 *Runtime Manager* defines the C2F and C2F using the `WIFIAssumption`
 class that is derived from the `Assumption` base class. The base class
 contains the data member `ACTIVE_CONTROLLER` that represents the
-controllers. Code snippet in Listing X depicts the notable data members and member functions of `Assumption` class and the derived class `WIFIAssumption`. The `WIFIAssumption` class can be found in the directory `/runtimeManager/assumptions`.
+controllers. Code snippet in Listing X depicts the notable data members and member functions of `Assumption` class and the derived class `WIFIAssumption`. The `WIFIAssumption` class can be found in the directory [assumptions](src/veins/modules/application/platooning/runtimeManager/assumptions).
 
 ``` cpp
 class Assumption {
@@ -338,7 +335,7 @@ private:
 In the current implementation, both `C2F` and `C2L` contain a single
 data member to represent the connection quality. However, we define two
 classes to represent the front and lead vehicle's connection quality,
-and they are derived from the same indirect base class `runtimeManager/StateParameter*`. This is done to facilitate a distinct extension of the C2F and C2L class types. For instance, if a user wants to add another data member to the C2F representing the distance to the front vehicle such that a controller switching will be triggered based on both these criteria, they can do so in the `C2F` class. The user do not need to make changes in the C2L class in this case. The communication quality of the C2L and C2F are categorized into OK, POOR, and CRITICAL which are measured based on the number of consecutive packet loss from the front and lead vehicles, Listing X. The C2L, C2F, `WIFI_QUALITY` can be found in the `runtimeManager/StateParameter*` directory.
+and they are derived from the same indirect base class [StateParameter.h](src/veins/modules/application/platooning/runtimeManager/StateParameter.h). This is done to facilitate a distinct extension of the C2F and C2L class types. For instance, if a user wants to add another data member to the C2F representing the distance to the front vehicle such that a controller switching will be triggered based on both these criteria, they can do so in the `C2F` class. The user do not need to make changes in the C2L class in this case. The communication quality of the C2L and C2F are categorized into OK, POOR, and CRITICAL which are measured based on the number of consecutive packet loss from the front and lead vehicles, Listing X.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/StateParameter.h#L23-L27
 
@@ -353,7 +350,7 @@ enum WIFI_QUALITY {
 Every state of `Assumption` may or may not have an associated
 `Guarantee` which dictates the action to be taken by the
 `Runtime Manager`. The default assumption/guarantee `contracts` of the
-PlatoonSAFE simulator can be found in the directory `runtimeManager/contracts.*`. Every `Contract` in the contract list in `Runtime Manager` is stored as `key-value` pair using `C++ Standard Template Library (STL)`. The STL provides the `map` container, where `Assumption` is used as `key` and `Guarantee` is the corresponding `value`. If the `Runtime Manager` detects any change in communication quality perceived by the ego vehicle, it looks for the corresponding `Guarantee` by iterating through the contracts list and performs the action specified by the `Guarantee` through a call of the `operator()` method. Current implementation of `Runtime Manager` deals with three different kind of `Guarantee`, e.g., `ChangeController`, `AdjustGap2Front`, and `ChangeControllerAndAdjustGap2Front`. The first two are derived from the `Guarantee` class, and `ChangeControllerAndAdjustGap2Front` has `ChangeController` and `AdjustGap2Front` as direct base classes. Listing X depicts the basic structure of the `Guarantee` and its derived classes. In case of `ChangeController`, the `Runtime Manager` changes the `ACTIVE_CONTROLLER` of the ego vehicle to the controller indicated by the data member `to`, and this is performed through the `setActiveController` method of the `TraCI` interface. `AdjustGap2Front` class is responsible for adjusting the time gap or constant distance gap with respect to the front vehicle. The `ChangeControllerAndAdjustGap2Front` designates the functions to be performed by its base classes `ChangeController` and `AdjustGap2Front`. The classes associated with the guarantees can be found in the directory `runtimeManager/guarantees`.
+PlatoonSAFE simulator can be found in [Contracts.h](src/veins/modules/application/platooning/runtimeManager/Contracts.h). Every `Contract` in the contract list in `Runtime Manager` is stored as `key-value` pair using `C++ Standard Template Library (STL)`. The STL provides the `map` container, where `Assumption` is used as `key` and `Guarantee` is the corresponding `value`. If the `Runtime Manager` detects any change in communication quality perceived by the ego vehicle, it looks for the corresponding `Guarantee` by iterating through the contracts list and performs the action specified by the `Guarantee` through a call of the `operator()` method. Current implementation of `Runtime Manager` deals with three different kind of `Guarantee`, e.g., `ChangeController`, `AdjustGap2Front`, and `ChangeControllerAndAdjustGap2Front`. The first two are derived from the `Guarantee` class, and `ChangeControllerAndAdjustGap2Front` has `ChangeController` and `AdjustGap2Front` as direct base classes. Listing X depicts the basic structure of the `Guarantee` and its derived classes. In case of `ChangeController`, the `Runtime Manager` changes the `ACTIVE_CONTROLLER` of the ego vehicle to the controller indicated by the data member `to`, and this is performed through the `setActiveController` method of the `TraCI` interface. `AdjustGap2Front` class is responsible for adjusting the time gap or constant distance gap with respect to the front vehicle. The `ChangeControllerAndAdjustGap2Front` designates the functions to be performed by its base classes `ChangeController` and `AdjustGap2Front`. The classes associated with the guarantees can be found in the directory [guarantees](src/veins/modules/application/platooning/runtimeManager/guarantees/).
 
 ``` cpp
 enum class GAP2FRONT {
@@ -400,13 +397,7 @@ The PlatoonSAFE simulator facilitates user defined contracts. This is
 motivated by the fact that a user can define their own contracts without
 having deep knowledge on the OMNeT++ simulation framework. It is
 possible to modify the `.txt` file to accommodate such user defined
-contracts. The file is located in the directory
-`runtimeManager/input/contract.txt`. A parser is developed to parse the
-input to the OMNeT++ `contract` class type. The parser grammar can be
-found in the directory `runtimeManager/rmParser/parserGrammars`. If a
-user defines their own contracts they need to set the
-`readContractFromInputFile` parameter in the `RMModule.ini` file to
-`true`; in that case, the default contracts will be ignored.
+contracts. The file is located in [contracts.txt](src/veins/modules/application/platooning/runtimeManager/input/contracts.txt). A parser is developed to parse the input to the OMNeT++ `contract` class type. The parser grammar can be found in the directory [rmParser/parserGrammars](src/veins/modules/application/platooning/runtimeManager/rmParser/parserGrammars/). If a user defines their own contracts they need to set the `readContractFromInputFile` parameter in the [`RMModule.ini`](/examples/human/RMModule.ini) file to `true`; in that case, the default contracts will be ignored.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt#L13-L14
 
@@ -475,15 +466,7 @@ dist2pred=value]
 Implementation of the Braking Strategies
 ========================================
 
-The emergency braking strategies are implemented in the\
-`src/veins/modules/application/platooning/protocols/BaseProtocol.*`
-files of the Plexe simulator. The reason is that the developers of the
-Plexe simulator implement the creation of CAMs and the handling of the
-CAMs received from other vehicles in these files. In addition, we create
-two other message types called `BrakingPacket` and `ackPkt`. The
-`BrakingPacket` acts as the DENM, and the `ackPkt` acts as the ACKs
-required in the AEB and CEBP strategies. For the details of how to
-create messages in OMNeT++, please refer to the OMNeT++ user manual.
+The emergency braking strategies are implemented in [BaseProtocol.cc](src/veins/modules/application/platooning/protocols/BaseProtocol.cc) and [BaseProtocol.h](src/veins/modules/application/platooning/protocols/BaseProtocol.h) files of the Plexe simulator. The reason is that the developers of the Plexe simulator implement the creation of CAMs and the handling of the CAMs received from other vehicles in these files. In addition, we create two other message types called `BrakingPacket` and `ackPkt`. The `BrakingPacket` acts as the DENM, and the `ackPkt` acts as the ACKs required in the AEB and CEBP strategies. For the details of how to create messages in OMNeT++, please refer to the OMNeT++ user manual.
 
 In the initialization of the `BaseProtocol.*`, we first check if the
 vehicle is the lead vehicle in the platoon and whether the time at which
@@ -544,7 +527,7 @@ these can be found in the *handleSelfMsg* function.
 
 Results collection and Analysis
 ===============================
-PlatoonSAFE includes several scripts to help the user collect and analize results of simulations. All these scripts are located in `src/examples/human/externalScripts/` and they can be used for the following purposes:
+PlatoonSAFE includes several scripts to help the user collect and analize results of simulations. All these scripts are located in [externalScripts](src/examples/human/externalScripts/) and they can be used for the following purposes:
 
 1. **Automatize simulations** to run different scenarios.
 
@@ -554,29 +537,29 @@ PlatoonSAFE includes several scripts to help the user collect and analize result
 
 4. **Evaluate ML algorithms** from simualtion reuslts.
 
-`runSimulations.py` is the main script that executes all the scenarios defined in `simParam.py`. It will run all the simulations, parse the .vec files into .csv files, and save all the results (collision, stop time and stop distance) into a unique file with. The user shall adapt the scenarios that wants to execute in `simParam.py`. We have defined some of the parameters that can be changed, but new ones can be added. For this, it is necessary to include how the parameter is defined in the `.ini` file ant in which line. `simParamHelper.py` can be used to check easier in which lines are located the parameters. This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
+[runSimulations.py](examples/human/externalScripts/runSimulations.py) is the main script that executes all the scenarios defined in [simParam.py](examples/human/externalScripts/simParam.py). It will run all the simulations, parse the .vec files into .csv files, and save all the results (collision, stop time and stop distance) into a unique file with. The user shall adapt the scenarios that wants to execute in [simParam.py](examples/human/externalScripts/simParam.py). We have defined some of the parameters that can be changed, but new ones can be added. For this, it is necessary to include how the parameter is defined in the `.ini` file ant in which line. [simParamHelper.py](examples/human/externalScripts/simParamHelper.py) can be used to check easier in which lines are located the parameters. This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
 
 ```
 cd src/examples/human/externalScripts/
 python3 runSimulations.py
 ```
 
-`runSimNN.py` is the main script that runs the simulations using the NN defined in `NNServerThread.py`. It connects to PlatoonSAFE simulator via UDP to exchange communication delays in the LeadVehicle of the platoon and predict thefuture ones. This script is only prepared to run one scenario, but with multiple seeds. The structure of the NN can be changed in `NNServerThread.py`. UDP connection can also be changed (port, address). Remember to adapt boths sides, `NNServerThread.py` and `AIAlgotihms.cc` (function *getNNServerAdd*)This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
+[runSimNN.py](examples/human/externalScripts/runSimNN.py) is the main script that runs the simulations using the NN defined in [NNServerThread.py](examples/human/externalScripts/NNServerThread.py). It connects to PlatoonSAFE simulator via UDP to exchange communication delays in the LeadVehicle of the platoon and predict thefuture ones. This script is only prepared to run one scenario, but with multiple seeds. The structure of the NN can be changed in [NNServerThread.py](examples/human/externalScripts/NNServerThread.py). UDP connection can also be changed (port, address). Remember to adapt boths sides, [NNServerThread.py](examples/human/externalScripts/NNServerThread.py) and [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc) (function *getNNServerAdd()*)This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
 
 ```
 cd src/examples/human/externalScripts/
 python3 runSimNN.py
 ```
 
-`simUtils.py` contains a function *createResultCSV* that converts resutls from PlatoonSAFE (`.vec`) into `.csv` files with the following structure: *ParameterName*, *VehicleID*, *SimulationTime*, *ParameterValue*. During this format conversion, the script also computes three important metrics required for analysing emergency braking strategies: inter-vehicle collisions, stopping distance of the LV, and the total time required for the whole platoon to transition to the fail-safe state from when braking started. `resultsFromVec.py` contains an example of how this function can be used to extrac results from several vector files obtained after executing several simulations.
+[simUtils.py](examples/human/externalScripts/simUtils.py) contains a function *createResultCSV* that converts resutls from PlatoonSAFE (`.vec`) into `.csv` files with the following structure: *ParameterName*, *VehicleID*, *SimulationTime*, *ParameterValue*. During this format conversion, the script also computes three important metrics required for analysing emergency braking strategies: inter-vehicle collisions, stopping distance of the LV, and the total time required for the whole platoon to transition to the fail-safe state from when braking started. [resultsFromVec.py](examples/human/externalScripts/resultsFromVec.py) contains an example of how this function can be used to extrac results from several vector files obtained after executing several simulations.
 
-`errorPlot.py` is a script that shows how the performance of the ML algorithms can be evaluated. in order to replicate this script, it is necessary to extract csv files of the predicted delay and the error of the algorithms from the vector files. To do that:
+[errorPlot.py](examples/human/externalScripts/errorPlot.py) is a script that shows how the performance of the ML algorithms can be evaluated. in order to replicate this script, it is necessary to extract csv files of the predicted delay and the error of the algorithms from the vector files. To do that:
 1. Open vector file in OMNet++
 2. Select delay/error vector
 3. Rigth click -> Export Data -> CSV for SpreadSeeths.
 4. Save them with specific names and adapt the code below for that
 
-Once the csv files are created, `joinResultsCSV` shall be used to combine delays and errors of all the algorithms into the same file, and with these files, use `errorPlot.py` to calculate the Root Mean Squared Error of all algorithms and plot the accumulative sum of the errors.
+Once the csv files are created, [joinResultsCSV.py](examples/human/externalScripts/joinResultsCSV.py) shall be used to combine delays and errors of all the algorithms into the same file, and with these files, use [errorPlot.py](examples/human/externalScripts/errorPlot.py) to calculate the Root Mean Squared Error of all algorithms and plot the accumulative sum of the errors.
 
 All these scripts contain explanations by themself, but it is recommendable to check them, specially regarding PATHS used inside.
 
