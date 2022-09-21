@@ -614,6 +614,46 @@ these can be found in the *handleSelfMsg* function.
 
 Results collection and Analysis
 ===============================
+PlatoonSAFE includes several scripts to help the user collect and analize results of simulations. All these scripts are located in `src/examples/human/externalScripts/` and they can be used for the following purposes:
+
+1. **Automatize simulations** to run different scenarios.
+
+2. **Run Neural Network** simulations with PlatoonSAFE.
+
+3. **Extract information** from `.vec` files.
+
+4. **Evaluate ML algorithms** from simualtion reuslts.
+
+`runSimulations.py` is the main script that executes all the scenarios defined in `simParam.py`. It will run all the simulations, parse the .vec files into .csv files, and save all the results (collision, stop time and stop distance) into a unique file with. The user shall adapt the scenarios that wants to execute in `simParam.py`. We have defined some of the parameters that can be changed, but new ones can be added. For this, it is necessary to include how the parameter is defined in the `.ini` file ant in which line. `simParamHelper.py` can be used to check easier in which lines are located the parameters. This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
+
+```
+cd src/examples/human/externalScripts/
+python3 runSimulations.py
+```
+
+`runSimNN.py` is the main script that runs the simulations using the NN defined in `NNServerThread.py`. It connects to PlatoonSAFE simulator via UDP to exchange communication delays in the LeadVehicle of the platoon and predict thefuture ones. This script is only prepared to run one scenario, but with multiple seeds. The structure of the NN can be changed in `NNServerThread.py`. UDP connection can also be changed (port, address). Remember to adapt boths sides, `NNServerThread.py` and `AIAlgotihms.cc` (function *getNNServerAdd*)This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
+
+```
+cd src/examples/human/externalScripts/
+python3 runSimNN.py
+```
+
+`simUtils.py` contains a function *createResultCSV* that converts resutls from PlatoonSAFE (`.vec`) into `.csv` files with the following structure: *ParameterName*, *VehicleID*, *SimulationTime*, *ParameterValue*. During this format conversion, the script also computes three important metrics required for analysing emergency braking strategies: inter-vehicle collisions, stopping distance of the LV, and the total time required for the whole platoon to transition to the fail-safe state from when braking started. `resultsFromVec.py` contains an example of how this function can be used to extrac results from several vector files obtained after executing several simulations.
+
+`errorPlot.py` is a script that shows how the performance of the ML algorithms can be evaluated. in order to replicate this script, it is necessary to extract csv files of the predicted delay and the error of the algorithms from the vector files. To do that:
+1. Open vector file in OMNet++
+2. Select delay/error vector
+3. Rigth click -> Export Data -> CSV for SpreadSeeths.
+4. Save them with specific names and adapt the code below for that
+
+Once the csv files are created, `joinResultsCSV` shall be used to combine delays and errors of all the algorithms into the same file, and with these files, use `errorPlot.py` to calculate the Root Mean Squared Error of all algorithms and plot the accumulative sum of the errors.
+
+All these scripts contain explanations by themself, but it is recommendable to check them, specially regarding PATHS used inside.
+
+
+
+References
+===========
 
 [^1]: http://plexe.car2x.org/
 
