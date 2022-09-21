@@ -556,7 +556,7 @@ python3 runSimNN.py
 [errorPlot.py](examples/human/externalScripts/errorPlot.py) is a script that shows how the performance of the ML algorithms can be evaluated. in order to replicate this script, it is necessary to extract csv files of the predicted delay and the error of the algorithms from the vector files. To do that:
 1. Open vector file in OMNet++
 2. Select delay/error vector
-3. Rigth click -> Export Data -> CSV for SpreadSeeths.
+3. Rigth click $\rightarrow$ Export Data $\rightarrow$ CSV for SpreadSeeths.
 4. Save them with specific names and adapt the code below for that
 
 Once the csv files are created, [joinResultsCSV.py](examples/human/externalScripts/joinResultsCSV.py) shall be used to combine delays and errors of all the algorithms into the same file, and with these files, use [errorPlot.py](examples/human/externalScripts/errorPlot.py) to calculate the Root Mean Squared Error of all algorithms and plot the accumulative sum of the errors.
