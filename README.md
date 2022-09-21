@@ -69,23 +69,29 @@ steps to have a working version of PlatoonSAFE in Ubuntu:
 3.  Some third party libraries are required to be installed for building
     Plexe-SUMO 2.1. Run the following command
 
-            sudo apt-get install libgdal-dev libproj-dev \ 
-            libxerces-c-dev libfox-1.6-dev libtool \ 
-            autoconf
+```
+sudo apt-get install libgdal-dev libproj-dev \ 
+libxerces-c-dev libfox-1.6-dev libtool \ 
+autoconf
+```
 
 4.  Configure and install SUMO using the following commands
 
-                cd ~/src/plexe-sumo
-                make -f Makefile.cvs
-                ./configure
-                make
+```
+cd ~/src/plexe-sumo
+make -f Makefile.cvs
+./configure
+make
+```
 
 5.  Add the `bin` directory of SUMO at the end of your `.bashrc` file.
 
-                gedit ~/.bashrc
-                export PATH=$PATH:$HOME/src/plexe-sumo/bin
+```
+gedit ~/.bashrc
+export PATH=$PATH:$HOME/src/plexe-sumo/bin
+```
 
-    Please feel free to use any editor other than `gedit`.
+Please feel free to use any editor other than `gedit`.
 
 6.  Reopen the terminal and type SUMO. You should see something as
     follows; otherwise, the SUMO installation has not been done
@@ -101,9 +107,11 @@ steps to have a working version of PlatoonSAFE in Ubuntu:
 
 7.  Now build the PlatoonSAFE using the following commands
 
-                cd ~/src/PlatoonSAFE-1.1
-                make -f Makefile
-                make MODE=release
+```
+cd ~/src/PlatoonSAFE-1.1
+make -f Makefile
+make MODE=release
+```
 
 8.  Now type `omnetpp` in your terminal to open the IDE and import
     PlatoonSAFE-2.1 (File $\rightarrow$ import $\rightarrow$ Existing
@@ -151,7 +159,7 @@ Runtime Manager parameters inherits the parameters of `omnetpp.ini`
 file, Listing [\[rmModule\]](#rmModule){reference-type="ref"
 reference="rmModule"}.
 
-``` {#rmModule .numberLines numbers="left" caption="\\texttt{RMModule.ini}" label="rmModule"}
+``` javascript {.line-numbers}
 include omnetpp.ini
 *.node[*].runtimeManager.rmEnabled = true
 *.node[*].runtimeManager.rmMonitorInterval = 0.1 s
