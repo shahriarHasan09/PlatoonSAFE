@@ -17,10 +17,10 @@ Introduction
 
 This document describes how to download, install, and use the
 PlatoonSAFE simulator. The simulator is developed as an extension of the
-Plexe[^1] simulator which is an OMNeT++-based platooning simulator. In
+[Plexe](http://plexe.car2x.org/) simulator which is an OMNeT++-based platooning simulator. In
 Plexe, several control algorithms, platoon maneuvering are implemented.
 Plexe is developed as an extension of the popular VANET simulator
-Veins[^2] in which the IEEE 802.11p protocol stack is implemented. In
+[Veins](https://veins.car2x.org/) in which the IEEE 802.11p protocol stack is implemented. In
 addition, realistic channel models are available. Both Plexe and Veins
 facilitates realistic large scale simulations through the SUMO
 simulator. As the PlatoonSAFE simulator is an extension of the Plexe
@@ -51,16 +51,16 @@ Plexe-SUMO 2.1. The PlatoonSAFE simulator only extends the Plexe-Veins
 2.1, but no modifications are performed in the Plexe-SUMO 2.1 part.
 Therefore, a user of the PlatoonSAFE simulator needs to download the
 PlatoonSAFE simulator from this git repository. In addition, the
-Plexe-SUMO 2.1 has to be downloaded from the download section of Plexe
-website[^3].
+Plexe-SUMO 2.1 has to be downloaded from the download section of [Plexe
+website](http://plexe.car2x.org/download/).
 
 The PlatoonSAFE simulator has been tried in Ubuntu 16.04, 18.04, and
-20.04. For installing in MAC OS, please follow the guide of Plexe
-documentation 1.1[^4] (SUMO installation). Please follow the following
+20.04. For installing in MAC OS, please follow the guide of [Plexe
+documentation 1.1](http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf) (SUMO installation). Please follow the following
 steps to have a working version of PlatoonSAFE in Ubuntu:
 
 1.  Install OMNeT++ in your OS. The detailed installation guide for
-    several operating systems can be found in OMNeT++ website[^5].
+    several operating systems can be found in [OMNeT++ website](https://doc.omnetpp.org/omnetpp/manual/).
 
 2.  Download PlatoonSAFE and Plexe-SUMO 2.1 and unzip them. Create a
     folder called `src` in your home directory (Ubuntu) and copy
@@ -132,32 +132,17 @@ make MODE=release
 10. 
         opp_run -m -u Qtenv -c RTM-SB-SVR -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins RTMModule.ini
 
-Please note that running the simulation in GUI has been instructed
-above. However, in order to run large scale parallel simulations, you
-will need to run the simulations in *Cmdenv* mode. Please refer to
-OMNeT++ manual[^6] to learn how to run simulations using `Cmdenv`. For
-any issues with installation, please first go to the `Building` and
-`FAQ` tabs of the Plexe website where several common installation issues
-are discussed. Also, refer to `OMNeT++ Users` group in google groups and
-stackoverflow for OMNeT++-related issues.
+Please note that running the simulation in GUI has been instructed above. However, in order to run large scale parallel simulations, you will need to run the simulations in *Cmdenv* mode. Please refer to [OMNeT++ manual](https://doc.omnetpp.org/omnetpp/manual/) to learn how to run simulations using `Cmdenv`. For any issues with installation, please first go to the `Building` and `FAQ` tabs of the Plexe website where several common installation issues are discussed. Also, refer to `OMNeT++ Users` group in google groups and stackoverflow for OMNeT++-related issues.
 
 PlatoonSAFE Simulation Parameters
 =================================
 
-In this section, the parameters used to simulate the fail-operational
-and fail-safe features in the PlatoonSAFE simulator are explained.
+In this section, the parameters used to simulate the fail-operational and fail-safe features in the PlatoonSAFE simulator are explained.
 
 Runtime Manager parameters
 --------------------------
 
-The parameters of Plexe simulator that specifies the PHY and MAC layer
-specifications, neighbouring traffic, beacon frequencies, controller
-parameters, and the simulated scenarios, are available in the
-`omnetpp.ini` file. Please refer to the Plexe documentation for the
-details of these parameters. The `RMModule.ini` file that specifies the
-Runtime Manager parameters inherits the parameters of `omnetpp.ini`
-file, Listing [\[rmModule\]](#rmModule){reference-type="ref"
-reference="rmModule"}.
+The parameters of Plexe simulator that specifies the PHY and MAC layer specifications, neighbouring traffic, beacon frequencies, controller parameters, and the simulated scenarios, are available in the `omnetpp.ini` file. Please refer to the Plexe documentation for the details of these parameters. The `RMModule.ini` file that specifies the Runtime Manager parameters inherits the parameters of `omnetpp.ini` file, Listing X.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTMModule.ini#L1-L43
 
@@ -190,9 +175,7 @@ include omnetpp.ini
 *.node[*].runtimeManager.emergencyCaccConstantSpacingFactor = 0.25
 ```
 
-The parameters of the Listing
-[\[rmModule\]](#rmModule){reference-type="ref" reference="rmModule"} are
-explained below:
+The parameters of the Listing X are explained below:
 
 -   Line 2: The `rmEnabled` has to be set `true` in order to use the
     runtime manager, otherwise, default Plexe simulator will be run.
@@ -233,7 +216,7 @@ explained below:
 
 -   Lines 24-28: In the paper, we mention three controllers, ACC, CACC,
     and PLATOON, and there is a clear distinction between the CACC and
-    PLATOON controllers[^7]. In the Plexe simulator, the
+    PLATOON controllers[^1]. In the Plexe simulator, the
     ACC, CACC, and PLATOON controllers (as termed in the PlatoonSAFE
     paper) are called as ACC, Ploeg, and CACC, respectively. The time
     headway or distance gap of the controllers are read from the
@@ -333,13 +316,7 @@ state of the ego vehicle.
 *Runtime Manager* defines the C2F and C2F using the `WIFIAssumption`
 class that is derived from the `Assumption` base class. The base class
 contains the data member `ACTIVE_CONTROLLER` that represents the
-controllers. Code snippet in Listing
-[\[listing:assumption\]](#listing:assumption){reference-type="ref"
-reference="listing:assumption"} depicts the notable data members and
-member functions of `Assumption` class and the derived class
-`WIFIAssumption`. The `WIFIAssumption` class can be found in the
-directory\
-`runtimeManager/assumptions`.
+controllers. Code snippet in Listing X depicts the notable data members and member functions of `Assumption` class and the derived class `WIFIAssumption`. The `WIFIAssumption` class can be found in the directory `/runtimeManager/assumptions`.
 
 ``` cpp
 class Assumption {
@@ -361,19 +338,7 @@ private:
 In the current implementation, both `C2F` and `C2L` contain a single
 data member to represent the connection quality. However, we define two
 classes to represent the front and lead vehicle's connection quality,
-and they are derived from the same indirect base class
-`runtimeManager/StateParameter*`. This is done to facilitate a distinct
-extension of the C2F and C2L class types. For instance, if a user wants
-to add another data member to the C2F representing the distance to the
-front vehicle such that a controller switching will be triggered based
-on both these criteria, they can do so in the `C2F` class. The user do
-not need to make changes in the C2L class in this case. The
-communication quality of the C2L and C2F are categorized into OK, POOR,
-and CRITICAL which are measured based on the number of consecutive
-packet loss from the front and lead vehicles, Listing
-[\[listing:wifi\_quality\]](#listing:wifi_quality){reference-type="ref"
-reference="listing:wifi_quality"}. The C2L, C2F, `WIFI_QUALITY` can be
-found in the `runtimeManager/StateParameter*` directory.
+and they are derived from the same indirect base class `runtimeManager/StateParameter*`. This is done to facilitate a distinct extension of the C2F and C2L class types. For instance, if a user wants to add another data member to the C2F representing the distance to the front vehicle such that a controller switching will be triggered based on both these criteria, they can do so in the `C2F` class. The user do not need to make changes in the C2L class in this case. The communication quality of the C2L and C2F are categorized into OK, POOR, and CRITICAL which are measured based on the number of consecutive packet loss from the front and lead vehicles, Listing X. The C2L, C2F, `WIFI_QUALITY` can be found in the `runtimeManager/StateParameter*` directory.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/StateParameter.h#L23-L27
 
@@ -388,33 +353,7 @@ enum WIFI_QUALITY {
 Every state of `Assumption` may or may not have an associated
 `Guarantee` which dictates the action to be taken by the
 `Runtime Manager`. The default assumption/guarantee `contracts` of the
-PlatoonSAFE simulator can be found in the directory\
-`runtimeManager/contracts.*`. Every `Contract` in the contract list in
-`Runtime Manager` is stored as `key-value` pair using
-`C++ Standard Template Library (STL)`. The STL provides the `map`
-container, where `Assumption` is used as `key` and `Guarantee` is the
-corresponding `value`. If the `Runtime Manager` detects any change in
-communication quality perceived by the ego vehicle, it looks for the
-corresponding `Guarantee` by iterating through the contracts list and
-performs the action specified by the `Guarantee` through a call of the
-`operator()` method. Current implementation of `Runtime Manager` deals
-with three different kind of `Guarantee`, e.g., `ChangeController`,
-`AdjustGap2Front`, and `ChangeControllerAndAdjustGap2Front`. The first
-two are derived from the `Guarantee` class, and
-`ChangeControllerAndAdjustGap2Front` has `ChangeController` and
-`AdjustGap2Front` as direct base classes. Listing
-[\[listing:contract\_guarantee\]](#listing:contract_guarantee){reference-type="ref"
-reference="listing:contract_guarantee"} depicts the basic structure of
-the `Guarantee` and its derived classes. In case of `ChangeController`,
-the `Runtime Manager` changes the `ACTIVE_CONTROLLER` of the ego vehicle
-to the controller indicated by the data member `to`, and this is
-performed through the `setActiveController` method of the `TraCI`
-interface. `AdjustGap2Front` class is responsible for adjusting the time
-gap or constant distance gap with respect to the front vehicle. The\
-`ChangeControllerAndAdjustGap2Front` designates the functions to be
-performed by its base classes `ChangeController` and `AdjustGap2Front`.
-The classes associated with the guarantees can be found in the directory
-`runtimeManager/guarantees`.
+PlatoonSAFE simulator can be found in the directory `runtimeManager/contracts.*`. Every `Contract` in the contract list in `Runtime Manager` is stored as `key-value` pair using `C++ Standard Template Library (STL)`. The STL provides the `map` container, where `Assumption` is used as `key` and `Guarantee` is the corresponding `value`. If the `Runtime Manager` detects any change in communication quality perceived by the ego vehicle, it looks for the corresponding `Guarantee` by iterating through the contracts list and performs the action specified by the `Guarantee` through a call of the `operator()` method. Current implementation of `Runtime Manager` deals with three different kind of `Guarantee`, e.g., `ChangeController`, `AdjustGap2Front`, and `ChangeControllerAndAdjustGap2Front`. The first two are derived from the `Guarantee` class, and `ChangeControllerAndAdjustGap2Front` has `ChangeController` and `AdjustGap2Front` as direct base classes. Listing X depicts the basic structure of the `Guarantee` and its derived classes. In case of `ChangeController`, the `Runtime Manager` changes the `ACTIVE_CONTROLLER` of the ego vehicle to the controller indicated by the data member `to`, and this is performed through the `setActiveController` method of the `TraCI` interface. `AdjustGap2Front` class is responsible for adjusting the time gap or constant distance gap with respect to the front vehicle. The `ChangeControllerAndAdjustGap2Front` designates the functions to be performed by its base classes `ChangeController` and `AdjustGap2Front`. The classes associated with the guarantees can be found in the directory `runtimeManager/guarantees`.
 
 ``` cpp
 enum class GAP2FRONT {
@@ -646,16 +585,4 @@ All these scripts contain explanations by themself, but it is recommendable to c
 References
 ===========
 
-[^1]: http://plexe.car2x.org/
-
-[^2]: https://veins.car2x.org/
-
-[^3]: http://plexe.car2x.org/download/
-
-[^4]: http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf
-
-[^5]: https://doc.omnetpp.org/omnetpp/InstallGuide.pdf
-
-[^6]: https://doc.omnetpp.org/omnetpp/manual/
-
-[^7]: Steven E. Shladover, Christopher Nowakowski, Xiao-Yun Lu, and Robert Ferlis.Cooperative adaptive cruise control: Definitions and operating concepts. *Transportation Research Record*, 2489(1):145–152, 2015.
+[^1]: Steven E. Shladover, Christopher Nowakowski, Xiao-Yun Lu, and Robert Ferlis.Cooperative adaptive cruise control: Definitions and operating concepts. *Transportation Research Record*, 2489(1):145–152, 2015.
