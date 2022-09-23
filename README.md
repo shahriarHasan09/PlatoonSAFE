@@ -38,10 +38,10 @@ sudo apt-get update
 sudo apt-get install default-jre python python3
 ````
 
-## Installation ##
+## PlatoonSAFE Installation guide in Linux ##
 1. First, install OMNeT++; the detailed installation guide for different operating systems can be found in [OMNeT++ website](https://doc.omnetpp.org/omnetpp/InstallGuide.pdf). Note that the `libosgearth` package required for 3D visualization in OMNeT++ `Qtenv` mode is no longer provided in Ubuntu 22.04. If you are using Ubuntu 22.04, install `libosgearth` from the source.  
 
-:exclamation: The libraries and packages required for installing OMNeT++ and Plexe-SUMO in Linux are listed together in the [Plexe website](http://plexe.car2x.org/building/) (under the heading _Install required libraries and tools_). You may consider installing these libraries and follow the [Step 1](http://plexe.car2x.org/building/) for an easy installation of OMNeT++. 
+:exclamation:The libraries and packages required for installing OMNeT++ and Plexe-SUMO in Linux are listed together in the [Plexe website](http://plexe.car2x.org/building/) (under the heading _Install required libraries and tools_). You may consider installing these libraries and follow the [Step 1](http://plexe.car2x.org/building/) for an easy installation of OMNeT++. 
 
 2. Now, [download PlatoonSAFE](https://github.com/shahriarHasan09/PlatoonSAFE), create a folder called `src` in your home directory, and unzip PlatoonSAFE. Alternatively, you can run the following commands to perform these taks from the terminal (_recommended_):
 
@@ -53,10 +53,36 @@ cd src/
 git clone https://github.com/shahriarHasan09/PlatoonSAFE.git
 ```
 
-3. 
-4. 
-5. 
-6. 
+3. Download Plexe-SUMO 2.1 from the [Plexe website](http://plexe.car2x.org/download/) (zip archives), unzip it, and move it to the `src` folder you just created in the `home` directory. 
+
+4. Install the following third party libraries required for building SUMO
+````
+sudo apt-get install libgdal-dev libproj-dev libxerces-c-dev libfox-1.6-dev libtool autoconf
+````
+
+5. Configure and install SUMO using the following commands
+
+```
+cd ~/src/plexe-sumo-plexe-2.1
+make -f Makefile.cvs
+./configure
+make
+```
+6. Add the `bin` directory of SUMO at the end of your `.bashrc` file. First, 
+
+```
+gedit ~/.bashrc
+```
+Then copy and paste the following line at the end of the file:
+```
+export PATH=$PATH:$HOME/src/plexe-sumo-plexe-2.1/bin
+```
+:exclamation:The end of your `.bashrc` file should now look something like this:
+```
+export PATH=$HOME/omnetpp-5.6.1/bin:$PATH
+export PATH=$PATH:$HOME/src/plexe-sumo-plexe-2.1/bin
+```
+
 7. 
 8.  
 
