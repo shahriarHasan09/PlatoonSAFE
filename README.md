@@ -35,8 +35,10 @@ simulator.
 
 Downloading and Installing PlatoonSAFE
 ======================================
+The PlatoonSAFE simulator extends the `Plexe 2.1` version, which consists of `Plexe-Veins 2.1` and `Plexe-SUMO 2.1`. In 2021, `Plexe 3.0` was released and the Plexe-SUMO part was integrated to the official SUMO simulator. However, we have not yet migrated the codes of PlatoonSAFE to the latest version of Plexe. The installation guides of PlatoonSAFE and `Plexe-SUMO 2.1` are provided below following the [Plexe 1.1 documentation](http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf). 
 
-Markup :  ## Simulation Environment ##
+
+## Simulation Environment ##
 
 Markup :  ## Installing PlatoonSAFE ##
 
