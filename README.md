@@ -125,9 +125,10 @@ You can run the simulations from the IDE or the terminal. From IDE, simulations 
 cd src/PlatoonSAFE/examples/human
 opp_run -m -u Qtenv -c sinusoidal-RTM -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins RTMModule.ini
 ````
-        
 
-Please note that running the simulation in GUI has been instructed above. However, in order to run large scale parallel simulations, you will need to run the simulations in *Cmdenv* mode. Please refer to [OMNeT++ manual](https://doc.omnetpp.org/omnetpp/manual/) to learn how to run simulations using `Cmdenv`. For any issues with installation, please first go to the `Building` and `FAQ` tabs of the Plexe website where several common installation issues are discussed. Also, refer to `OMNeT++ Users` group in google groups and stackoverflow for OMNeT++-related issues.
+Please note that running simulations with GUI have been instructed above. However, in order to run large scale and parallel simulations, you will need to run the simulations in *Cmdenv* mode. Please refer to the [OMNeT++ User Guide](https://doc.omnetpp.org/omnetpp/UserGuide.pdf) (Chapter 6) to learn how to run batch simulations in `Cmdenv` mode from the simulation launcher. In addition, we provide some [python scripts](examples/human/externalScripts/runSimulations.py) in PlatoonSAFE to automatize running selective and batch simulations. 
+
+For general issues related to OMNeT++, Plexe, or Veins, we recommend [Plexe FAQ section](http://plexe.car2x.org/faq/), [Plexe closed issues](https://github.com/michele-segata/plexe/issues?q=is%3Aissue+is%3Aclosed), [Veins google group](https://groups.google.com/g/omnetpp?label=veins), and [stackoverflow](https://stackoverflow.com/questions/tagged/omnet%2b%2b).
 
 PlatoonSAFE Simulation Parameters
 =================================
