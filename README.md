@@ -83,77 +83,26 @@ export PATH=$HOME/omnetpp-5.6.1/bin:$PATH
 export PATH=$PATH:$HOME/src/plexe-sumo-plexe-2.1/bin
 ```
 
-7. 
-8.  
-
-Markup :  ## Running Simulations ##
-
-The Plexe simulator (V. 2.1) requires installing Plexe-Veins 2.1 and
-Plexe-SUMO 2.1. The PlatoonSAFE simulator only extends the Plexe-Veins
-2.1, but no modifications are performed in the Plexe-SUMO 2.1 part.
-Therefore, a user of the PlatoonSAFE simulator needs to download the
-PlatoonSAFE simulator from this git repository. In addition, the
-Plexe-SUMO 2.1 has to be downloaded from the download section of [Plexe
-website](http://plexe.car2x.org/download/).
-
-The PlatoonSAFE simulator has been tried in Ubuntu 16.04, 18.04, and
-20.04. For installing in MAC OS, please follow the guide of [Plexe
-documentation 1.1](http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf) (SUMO installation). Please follow the following
-steps to have a working version of PlatoonSAFE in Ubuntu:
-
-1.  Install OMNeT++ in your OS. The detailed installation guide for
-    several operating systems can be found in [OMNeT++ website](https://doc.omnetpp.org/omnetpp/manual/).
-
-2.  Download PlatoonSAFE and Plexe-SUMO 2.1 and unzip them. Create a
-    folder called `src` in your home directory (Ubuntu) and copy
-    PlatoonSAFE and Plexe-SUMO 2.1 in there.
-
-3.  Some third party libraries are required to be installed for building
-    Plexe-SUMO 2.1. Run the following command
-
+7. Close the terminal, reopen it, and type in `SUMO`. You should see something like this: 
 ```
-sudo apt-get install libgdal-dev libproj-dev \ 
-libxerces-c-dev libfox-1.6-dev libtool \ 
-autoconf
+ Eclipse SUMO Version git
+ Build features: x86_64-pc-linux-gnu GDAL GUI
+ Copyright (C) 2001-2018 German Aerospace Center (DLR) and others; 
+ http://sumo.dlr.de
+ License EPL-2.0: Eclipse Public License Version 2 
+ <https://eclipse.org/legal/epl-v20.html>
+ Use --help to get the list of options.
 ```
 
-4.  Configure and install SUMO using the following commands
-
-```
-cd ~/src/plexe-sumo
-make -f Makefile.cvs
+8. Now, build PlatoonSAFE using the following commands:
+````
+cd ~/src/PlatoonSAFE
 ./configure
-make
-```
-
-5.  Add the `bin` directory of SUMO at the end of your `.bashrc` file.
-
-```
-gedit ~/.bashrc
-export PATH=$PATH:$HOME/src/plexe-sumo/bin
-```
-
-Please feel free to use any editor other than `gedit`.
-
-6.  Reopen the terminal and type SUMO. You should see something as
-    follows; otherwise, the SUMO installation has not been done
-    properly.
-
-         Eclipse SUMO Version git
-         Build features: x86_64-pc-linux-gnu GDAL GUI
-         Copyright (C) 2001-2018 German Aerospace Center (DLR) and others; 
-         http://sumo.dlr.de
-         License EPL-2.0: Eclipse Public License Version 2 
-         <https://eclipse.org/legal/epl-v20.html>
-         Use --help to get the list of options.
-
-7.  Now build the PlatoonSAFE using the following commands
-
-```
-cd ~/src/PlatoonSAFE-1.1
-make -f Makefile
 make MODE=release
-```
+````
+The installation process is now completed with this step.
+
+## Running Simulations ##
 
 8.  Now type `omnetpp` in your terminal to open the IDE and import
     PlatoonSAFE-2.1 (File $\rightarrow$ import $\rightarrow$ Existing
