@@ -34,6 +34,7 @@ The PlatoonSAFE simulator extends the `Plexe 2.1` version, which consists of `Pl
 * The external libraries required for running the NN algorithm in PlatoonSAFE are described below.
 * In order to use the OMNeT++ IDE you need to have java environment in the system. Moreover, both python and python3 are required for installing some configuration files. If your OS does not have them, consider running the following commands in the Linux terminal: 
 ````
+sudo apt-get update
 sudo apt-get install default-jre python python3
 ````
 
@@ -42,7 +43,22 @@ sudo apt-get install default-jre python python3
 
 :exclamation: The libraries and packages required for installing OMNeT++ and Plexe-SUMO in Linux are listed together in the [Plexe website](http://plexe.car2x.org/building/) (under the heading _Install required libraries and tools_). You may consider installing these libraries and follow the [Step 1](http://plexe.car2x.org/building/) for an easy installation of OMNeT++. 
 
-  
+2. Now, [download PlatoonSAFE](https://github.com/shahriarHasan09/PlatoonSAFE), create a folder called `src` in your home directory, and unzip PlatoonSAFE. Alternatively, you can run the following commands to perform these taks from the terminal (_recommended_):
+
+```
+cd
+sudo apt-get install git-all
+mkdir src
+cd src/
+git clone https://github.com/shahriarHasan09/PlatoonSAFE.git
+```
+
+3. 
+4. 
+5. 
+6. 
+7. 
+8.  
 
 Markup :  ## Running Simulations ##
 
