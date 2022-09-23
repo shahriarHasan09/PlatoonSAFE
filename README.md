@@ -23,16 +23,6 @@ Plexe is built on top of the widely used VANET simulator
 [Veins](https://veins.car2x.org/). Plexe and Veins
 facilitates realistic and large scale simulations through [OMNeT++](https://omnetpp.org/) and [SUMO](https://sumo.dlr.de/docs/index.html). As PlatoonSAFE is an extension of Plexes, it inherits all the features of Plexe and Veins. In addition, PlatoonSAFE implements fault tolerance mechanisms for evaluating platoon safety applications during platoon cruising and emergency braking. To this end, a Runtime Manager (RTM) is implemented, which takes into account the transient communication outages during runtime and assigns an appropriate controller and/or adjusts the inter-vehicle gaps based on the duration of outages. Several emergency braking strategies are also implemented that can be used for evaluating their efficacy in transitioning a platoon to the fail-safe state. Moreover, PlatoonSAFE integrates Machine Learning (ML) algorithms such as Neural Network (NN) and Online Support Vector Regression (Online SVR) that can be used to predict communication delays during platooning runtime and design delay-aware emergency braking strategies and control algorithms. 
 
-The PlatoonSAFE simulator is developed on the `Plexe 2.1` version. On 27
-April 2021, a new version of Plexe was released (`Plexe 3.0`) and the
-instructions for installing the `Plexe 2.1` was removed from the
-website. The installation of the PlatoonSAFE simulator is the same as
-the installation of `Plexe 2.1`. Hence, the installation guide is
-repeated in this document. However, please refer to the Plexe website
-(FAQ section) for common errors while installing the PlatoonSAFE
-simulator; they should not be any different from installing the Plexe
-simulator.
-
 Downloading and Installing PlatoonSAFE
 ======================================
 The PlatoonSAFE simulator extends the `Plexe 2.1` version, which consists of `Plexe-Veins 2.1` and `Plexe-SUMO 2.1`. In 2021, `Plexe 3.0` was released and the Plexe-SUMO part was integrated to the official SUMO simulator. However, we have not yet migrated the codes of PlatoonSAFE to the latest version of Plexe. The installation guides of PlatoonSAFE and `Plexe-SUMO 2.1` are provided below following the [Plexe 1.1 documentation](http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf). 
