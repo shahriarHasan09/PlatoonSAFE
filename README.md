@@ -15,23 +15,13 @@ Shahriar Hasan and Joseba Gorospe\
 Introduction
 ============
 
-This document describes how to download, install, and use the
-PlatoonSAFE simulator. The simulator is developed as an extension of the
-[Plexe](http://plexe.car2x.org/) simulator which is an OMNeT++-based platooning simulator. In
-Plexe, several control algorithms, platoon maneuvering are implemented.
-Plexe is developed as an extension of the popular VANET simulator
-[Veins](https://veins.car2x.org/) in which the IEEE 802.11p protocol stack is implemented. In
-addition, realistic channel models are available. Both Plexe and Veins
-facilitates realistic large scale simulations through the SUMO
-simulator. As the PlatoonSAFE simulator is an extension of the Plexe
-simulator, it inherits all the features of Plexe and Veins. The
-PlatoonSAFE simulator is mainly intended for enabling the simulation of
-platoon safety applications. This includes the implementation of several
-emergency braking strategies that a user can use to evaluate which one
-is more suitable towards attaining the fail-safe state in platooning.
-Moreover, several safety contracts are implemented in the PlatoonSAFE
-simulator to facilitate the evaluation of fail-operational platooning in
-a dense traffic scenario.
+This document describes how to download, install, use, and modify the
+PlatoonSAFE simulator. PlatoonSAFE is developed as an extension of
+[Plexe](http://plexe.car2x.org/), an OMNeT++-based platooning simulator. In
+Plexe, several control algorithms, platoon maneuvering operations, and mixed traffic scenarios are implemented.
+Plexe is built on top of the widely used VANET simulator
+[Veins](https://veins.car2x.org/). Plexe and Veins
+facilitates realistic and large scale simulations through [OMNeT++](https://omnetpp.org/) and [SUMO](https://sumo.dlr.de/docs/index.html). As PlatoonSAFE is an extension of Plexes, it inherits all the features of Plexe and Veins. In addition, PlatoonSAFE implements fault tolerance mechanisms for evaluating platoon safety applications during platoon cruising and emergency braking. To this end, a Runtime Manager (RTM) is implemented, which takes into account the transient communication outages during runtime and assigns an appropriate controller and/or adjusts the inter-vehicle gaps based on the duration of outages. Several emergency braking strategies are also implemented that can be used for evaluating their efficacy in transitioning a platoon to the fail-safe state. Moreover, PlatoonSAFE integrates Machine Learning (ML) algorithms such as Neural Network (NN) and Online Support Vector Regression (Online SVR) that can be used to predict communication delays during platooning runtime and design delay-aware emergency braking strategies and control algorithms. 
 
 The PlatoonSAFE simulator is developed on the `Plexe 2.1` version. On 27
 April 2021, a new version of Plexe was released (`Plexe 3.0`) and the
@@ -45,6 +35,12 @@ simulator.
 
 Downloading and Installing PlatoonSAFE
 ======================================
+
+Markup :  ## Simulation Environment ##
+
+Markup :  ## Installing PlatoonSAFE ##
+
+Markup :  ## Running Simulations ##
 
 The Plexe simulator (V. 2.1) requires installing Plexe-Veins 2.1 and
 Plexe-SUMO 2.1. The PlatoonSAFE simulator only extends the Plexe-Veins
