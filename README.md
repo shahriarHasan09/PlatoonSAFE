@@ -105,24 +105,27 @@ The installation process is now completed with this step.
 ## Running Simulations ##
 You can run the simulations from the IDE or the terminal. From IDE, simulations can be run in `Qtenv` mode to use the OMNeT++ and SUMO GUIs, and in `Cmdenv` mode, simulations run faster. A detailed guide on how to use the IDE, run the simulations, collect results, and take the advantage of the strong GUI facilitated by OMNeT++, please follow the [OMNeT++ IDE user guide](https://doc.omnetpp.org/omnetpp/UserGuide.pdf). A few instructions are provided below just to get you started:
 
-8.  Now type `omnetpp` in your terminal to open the IDE and import
-    PlatoonSAFE-2.1 (File $\rightarrow$ import $\rightarrow$ Existing
+1.  Type in `omnetpp` in your terminal to open the IDE and import
+    PlatoonSAFE (File $\rightarrow$ import $\rightarrow$ Existing
     projects into workspace $\rightarrow$ select root directory (browse
-    into PlatoonSAFE-1.1) $\rightarrow$ finish). Make sure that your
+    into PlatoonSAFE folder located in the `src`) $\rightarrow$ finish). Make sure that your
     build configuration is in `gcc-release` mode (right click on
-    PlatoonSAFE-1.1 $\rightarrow$ set active $\rightarrow$ gcc-release).
+    PlatoonSAFE $\rightarrow$ set active $\rightarrow$ gcc-release).
 
-9.  Now go to PlatoonSAFE $\rightarrow$ examples $\rightarrow$
-    safetyApps, and run [`RMModule.ini`](/examples/human/RMModule.ini). In order to run it, right click
-    on [`RMModule.ini`](/examples/human/RMModule.ini) $\rightarrow$ Run As $\rightarrow$ OMNeT++
-    Simulation. An window should pop-up, select Sinusoidal in the Config
-    name and 2 in Run number, and press OK. On the left-top corner of
+2.  Now, go to PlatoonSAFE $\rightarrow$ examples $\rightarrow$
+    safetyApps, and run [`RTMModule.ini`](/examples/human/RTMModule.ini). In order to run it, right click
+    on [`RTMModule.ini`](/examples/human/RTMModule.ini) $\rightarrow$ Run As $\rightarrow$ OMNeT++
+    Simulation. An window should pop-up, select the configuration you want to run, e.g., sinusoidal-RTM, then press OK. On the top-left corner of
     the OMNeT++ Qtenv window, click on either of the fast or express
-    buttons. This should start the simulation, and a SUMO window should
-    pop-up. At this point, you should see the platooning vehicles.
+    buttons. This should start the simulation and a SUMO window should
+    pop-up. At this point, you should see the platoon cruising.
 
-10. 
-        opp_run -m -u Qtenv -c RTM-SB-SVR -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins RTMModule.ini
+3. In order to run the simulations from the terminal, for example, you can run the following commands:
+````
+cd src/PlatoonSAFE/examples/human
+opp_run -m -u Qtenv -c sinusoidal-RTM -n .:../veins:../../src/veins --image-path=../../images -l ../../src/veins RTMModule.ini
+````
+        
 
 Please note that running the simulation in GUI has been instructed above. However, in order to run large scale parallel simulations, you will need to run the simulations in *Cmdenv* mode. Please refer to [OMNeT++ manual](https://doc.omnetpp.org/omnetpp/manual/) to learn how to run simulations using `Cmdenv`. For any issues with installation, please first go to the `Building` and `FAQ` tabs of the Plexe website where several common installation issues are discussed. Also, refer to `OMNeT++ Users` group in google groups and stackoverflow for OMNeT++-related issues.
 
