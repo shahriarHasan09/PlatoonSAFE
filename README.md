@@ -98,11 +98,12 @@ export PATH=$PATH:$HOME/src/plexe-sumo-plexe-2.1/bin
 ````
 cd ~/src/PlatoonSAFE
 ./configure
-make MODE=release
+make
 ````
 The installation process is now completed with this step.
 
 ## Running Simulations ##
+You can run the simulations from the IDE or the terminal. From IDE, simulations can be run in `Qtenv` mode to use the OMNeT++ and SUMO GUIs, and in `Cmdenv` mode, simulations run faster. A detailed guide on how to use the IDE, run the simulations, collect results, and take the advantage of the strong GUI facilitated by OMNeT++, please follow the [OMNeT++ IDE user guide](https://doc.omnetpp.org/omnetpp/UserGuide.pdf). A few instructions are provided below just to get you started:
 
 8.  Now type `omnetpp` in your terminal to open the IDE and import
     PlatoonSAFE-2.1 (File $\rightarrow$ import $\rightarrow$ Existing
