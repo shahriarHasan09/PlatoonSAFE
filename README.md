@@ -25,12 +25,24 @@ facilitates realistic and large scale simulations through [OMNeT++](https://omne
 
 Downloading and Installing PlatoonSAFE
 ======================================
-The PlatoonSAFE simulator extends the `Plexe 2.1` version, which consists of `Plexe-Veins 2.1` and `Plexe-SUMO 2.1`. In 2021, `Plexe 3.0` was released and the Plexe-SUMO part was integrated to the official SUMO simulator. However, we have not yet migrated the codes of PlatoonSAFE to the latest version of Plexe. The installation guides of PlatoonSAFE and `Plexe-SUMO 2.1` are provided below following the [Plexe 1.1 documentation](http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf). 
-
+The PlatoonSAFE simulator extends the `Plexe 2.1` version, which consists of `Plexe-Veins 2.1` and `Plexe-SUMO 2.1`. In 2021, `Plexe 3.0` was released and the Plexe-SUMO part was integrated to the official SUMO simulator. However, we have not yet migrated the codes of PlatoonSAFE to the latest version of Plexe. The installation guides of PlatoonSAFE and `Plexe-SUMO 2.1` are provided below following the [Plexe 1.1 documentation](http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf). Note that we have only extended Plexe-Veins 2.1 to develop the PlatoonSAFE simulator, but no changes are performed in the Plexe-SUMO 2.1.  
 
 ## Simulation Environment ##
+* PlatoonSAFE has been tested on Ubuntu 16.04, 18.04, and 20.04. For OS X and Windows installation, please follow the guidelines given in [Plexe website] and [Plexe 1.1 documentation](http://plexe.car2x.org/documentation/plexe-1.1-documentation.pdf). 
+* We have tried PlatoonSAFE in OMNeT++ versions upto 5.6.2
+* Several libraries and packages are required for running Plexe-SUMO, which are described below.
+* The external libraries required for running the NN algorithm in PlatoonSAFE are described below.
+* In order to use the OMNeT++ IDE you need to have java environment in the system. Moreover, both python and python3 are required for installing some configuration files. If your OS does not have them, consider running the following commands in the Linux terminal: 
+````
+sudo apt-get install default-jre python python3
+````
 
-Markup :  ## Installing PlatoonSAFE ##
+## Installation ##
+1. First, install OMNeT++; the detailed installation guide for different operating systems can be found in [OMNeT++ website](https://doc.omnetpp.org/omnetpp/InstallGuide.pdf). Note that the `libosgearth` package required for 3D visualization in OMNeT++ `Qtenv` mode is no longer provided in Ubuntu 22.04. If you are using Ubuntu 22.04, install `libosgearth` from the source.  
+
+:exclamation: The libraries and packages required for installing OMNeT++ and Plexe-SUMO in Linux are listed together in the [Plexe website](http://plexe.car2x.org/building/) (under the heading _Install required libraries and tools_). You may consider installing these libraries and follow the [Step 1](http://plexe.car2x.org/building/) for an easy installation of OMNeT++. 
+
+  
 
 Markup :  ## Running Simulations ##
 
