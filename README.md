@@ -100,6 +100,16 @@ cd ~/src/PlatoonSAFE
 ./configure
 make
 ````
+
+9. **In order to run the ML algorithms, some libraries are required to be installed:**
+
+````
+sudo apt-get install python3-pip
+pip3 install numpy
+pip3 install tensorflow
+pip3 intall keras
+````
+
 The installation process is now completed with this step.
 
 ## Running Simulations ##
@@ -137,7 +147,7 @@ The simulation parameters required for evaluating RTM, ML algorithms and the bra
 
 Runtime Manager parameters
 --------------------------
-The simulation parameters of the [RTMModule.ini](examples/human/RTMModule.ini) file are depicted below. First, you need to enable the RTM by setting the `rmEnabled` parameter to `true`. If you wish not to use RTM during platoon cruising, rather prefer the control algorithms implemented in Plexe, e.g., PATH CACC, PLOEG CACC, etc., simply disable the RTMModule and define the desired controller using `*.node[*].scenario.controller = "CACC"` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. It can be useful should you want to experiment with the braking strategies and ML algorithms with a specific controller employed during the cruising.   
+The simulation parameters of the [RTMModule.ini](examples/human/RTMModule.ini) file are depicted below. First, you need to enable the RTM by setting the `rmEnabled` parameter to `true`. If you wish not to use RTM during platoon cruising, rather prefer the control algorithms implemented in Plexe, e.g., PATH CACC, PLOEG CACC, etc., simply disable the RTMModule and define the desired controller using `*.node[*].scenario.controller = "CACC"` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. It can be useful should you want to experiment with the braking strategies and ML algorithms with a specific controller employed during cruising.   
 
 The parameters of Plexe simulator that specifies the PHY and MAC layer specifications, neighbouring traffic, beacon frequencies, controller parameters, and the simulated scenarios, are available in the `omnetpp.ini` file. Please refer to the Plexe documentation for the details of these parameters. The [`RMModule.ini`](/examples/human/RMModule.ini) file that specifies the Runtime Manager parameters inherits the parameters of `omnetpp.ini` file, Listing X.
 
