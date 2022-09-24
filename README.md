@@ -170,6 +170,8 @@ Different `configs` represent different simulation scenarios. A short descriptio
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTM-CEB-ML.ini#L1-L416
 
 - `Config sinusoidal-RTM` The platoon cruises in a sinusoidal fashion until the `sim-time-limit` is reached, and the platooning vehicles switch between the controllers and/or adjusts gap following the contracts in RTM module.
+- `Config RTM-CEBP` The platoon cruises in a sinusoidal fashion using the RTM and performs emergency braking at `40 s` into the simulation time using the CEBP braking strategy [(Bergenhem et al., 2018)](https://link.springer.com/chapter/10.1007/978-3-030-03424-5_26).  
+- 
 
 Emergency Braking Strategies' Parameters
 ----------------------------------------
