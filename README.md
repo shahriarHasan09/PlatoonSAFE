@@ -232,7 +232,7 @@ void RuntimeManager::handleSelfMsg(cMessage* msg) {
     }
 }
 ````
-The `egoLog` method logs the ego vehicle data, e.g., active controller, simulation time, acceleration, etc., and the `safetyViolationCheck` method checks if the inter-vehicle gaps are smaller than the `minSafetyDistance` specified in [RTMModule.ini](examples/human/RTMModule.ini). The `evaluate` method is probably the most important one. Every `rmMonitorInterval` the `evaluate` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) invokes the `evaluate` method in [Contracts.cc](src/veins/modules/application/platooning/runtimeManager/Contracts.cc), where RTM searches for a contract from the `rmContractsList` for the current communication quality, i.e., good, fair or poor, and the corresponding `Guarantee` is provided. Please follow the flow of codes from the `evaluate` method in [Contracts.cc](src/veins/modules/application/platooning/runtimeManager/Contracts.cc).   
+The `egoLog` method logs the ego vehicle data, e.g., active controller, simulation time, acceleration, etc., and the `safetyViolationCheck` method checks if the inter-vehicle gaps are smaller than the `minSafetyDistance` specified in [RTMModule.ini](examples/human/RTMModule.ini). The `evaluate` method is probably the most important one. Every `rmMonitorInterval` the `evaluate` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) invokes the `evaluate` method in [Contracts.cc](src/veins/modules/application/platooning/runtimeManager/Contracts.cc), where RTM searches for a contract from the `rmContractsList` for the `Assumptions`, i.e., communication quality, currently active controller, and the corresponding `Guarantee` is provided. Please follow the flow of codes from the `evaluate` method in [Contracts.cc](src/veins/modules/application/platooning/runtimeManager/Contracts.cc).   
 
 
 Assumption/Guarantee
@@ -246,10 +246,9 @@ pair results in a new data type named a `Contract`. Thus, a contract
 represents a guaranteed performance ensured by the RM for the current
 state of the ego vehicle.
 
-*Runtime Manager* defines the C2F and C2F using the `WIFIAssumption`
-class that is derived from the `Assumption` base class. The base class
-contains the data member `ACTIVE_CONTROLLER` that represents the
-controllers. Code snippet in Listing X depicts the notable data members and member functions of `Assumption` class and the derived class `WIFIAssumption`. The `WIFIAssumption` class can be found in the directory [`assumptions`](src/veins/modules/application/platooning/runtimeManager/assumptions).
+RTM defines the C2F and C2L using the [WIFIAssumption](src/veins/modules/application/platooning/runtimeManager/assumptions/WIFIAssumption.h)
+class that is derived from the [Assumption](src/veins/modules/application/platooning/runtimeManager/Assumption.h) base class. The base class
+contains the data member `ACTIVE_CONTROLLER` from which the active controller in ego vehicle can be obtained . The following truncated code snippet depicts the notable data members and member functions of the `Assumption` class and the derived class `WIFIAssumption`.
 
 ``` cpp
 class Assumption {
@@ -268,12 +267,7 @@ private:
 };
 ```
 
-In the current implementation, both `C2F` and `C2L` contain a single
-data member to represent the connection quality. However, we define two
-classes to represent the front and lead vehicle's connection quality,
-and they are derived from the same indirect base class [`StateParameter.h`](src/veins/modules/application/platooning/runtimeManager/StateParameter.h). This is done to facilitate a distinct extension of the C2F and C2L class types. For instance, if a user wants to add another data member to the C2F representing the distance to the front vehicle such that a controller switching will be triggered based on both these criteria, they can do so in the `C2F` class. The user do not need to make changes in the C2L class in this case. The communication quality of the C2L and C2F are categorized into OK, POOR, and CRITICAL which are measured based on the number of consecutive packet loss from the front and lead vehicles, Listing X.
-
-https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/StateParameter.h#L23-L27
+In the current implementation, [C2F](src/veins/modules/application/platooning/runtimeManager/StateParameter.h) and [C2L](src/veins/modules/application/platooning/runtimeManager/StateParameter.h) classes contain only one data member representing the communication qualities, and they both are derived from the same indirect base class [StateParameter](src/veins/modules/application/platooning/runtimeManager/StateParameter.h). This is to facilitate distinct extensions of the `C2F` and `C2L` class types. For instance, if a user wants to add another data member to the `C2F` representing the distance to the front vehicle such that a controller switching will be triggered based on both these criteria, they can do so in the `C2F` class. In this case, the user would not need to make changes in the `C2L` class. The `C2F` and `C2L` are further categorized into `OK`, `POOR`, and `CRITICAL`, which are measured based on the number of consecutive packet losses from the front and lead vehicles, see the following code snippet. Recall that the terms *good*, *fair* and *poor* in the paper are represented by *OK*, *POOR* and *CRITICAL* in the RTM module. 
 
 ``` cpp
 enum WIFI_QUALITY {
