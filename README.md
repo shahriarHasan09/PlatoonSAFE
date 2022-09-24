@@ -142,42 +142,11 @@ PlatoonSAFE Simulation Parameters
 
 The simulation parameters required for evaluating RTM, ML algorithms and the braking strategies can be found in the files [RTMModule.ini](examples/human/RTMModule.ini) and [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini). The RTM parameters are listed in a separate `.ini` file in order to distinct them from the Plexe and Veins parameters. The `RTMModule.ini` file inherits the parameters of `RTM-CEB-ML.ini` file. As a result, when you run the `RTMModule.ini` file, you need to choose from the simulation configurations listed in the `RTM-CEB-ML.ini` file.
 
-Runtime Manager parameters
---------------------------
+## Runtime Manager parameters ##
+
 The simulation parameters of the [RTMModule.ini](examples/human/RTMModule.ini) file are depicted below. First, you need to enable the RTM by setting the `rmEnabled` parameter to `true`. If you wish not to use RTM during platoon cruising, rather prefer the control algorithms implemented in Plexe, e.g., PATH CACC, PLOEG CACC, etc., simply disable the RTMModule and define the desired controller using `*.node[*].scenario.controller = "CACC"` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. It can be useful should you want to experiment with the braking strategies and ML algorithms with a specific controller employed during cruising. Although the simulation parameters are well commented, we explain some of them for further clarification.            
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTMModule.ini#L1-L43
-
-<!---
-``` javascript {.line-numbers}
-include omnetpp.ini
-*.node[*].runtimeManager.rmEnabled = true
-*.node[*].runtimeManager.rmMonitorInterval = 0.1 s
-*.node[*].runtimeManager.expectedBeconInterval = .105 s
-*.node[*].runtimeManager.readContractsFromInputFile = false
-*.node[*].runtimeManager.contractInputFilename  =  
-"/home/shahriar/plexe-veins-plexe-2.1/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt"
-*.node[*].runtimeManager.outputFilename = 
-"/home/shahriar/plexe-veins-plexe-2.1/src/veins/modules/application/platooning/runtimeManager/output/output"
-*.node[*].runtimeManager.write2file = true
-
-*.node[*].runtimeManager.nPacketLossPoor = 3
-*.node[*].runtimeManager.nPacketLossCritical = 6
-
-*.node[*].runtimeManager.upgradationEnabled = true
-*.node[*].runtimeManager.degradationEnabled = true
-*.node[*].runtimeManager.gapControlEnabled  = true
-
-*.node[*].runtimeManager.minSafetyDistance = ${minSafetyDistance = 2}m
-*.node[*].runtimeManager.maxDeceleration   = -8.0mpsps
-
-*.node[*].runtimeManager.accHeadwaytimeGap = ${headway}s
-*.node[*].runtimeManager.ploegHeadwayTimeGap    = ${ploegH}s
-*.node[*].runtimeManager.emergencyPloegHeadwayTimeGapFactor = 0.25
-*.node[*].runtimeManager.caccConstantSpacing    = ${caccSpacing}m
-*.node[*].runtimeManager.emergencyCaccConstantSpacingFactor = 0.25
-```
--->
 
 -   Line 12: The interval at which a beacon is expected from the lead or
     front vehicle, defined by `beaconInterval` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. The duration of communication outage can also be expressed in terms of no. of packet losses. For instance, if `beaconInterval` is `0.1 s (100 ms)`, a communication outage for `200 ms` can be interpreted as `two` packet losses.
@@ -190,6 +159,8 @@ include omnetpp.ini
 -   Lines 24-26: For instance, if you want the platoon to continue cruising in the *degraded* modes which are adopted due to transient communication errors, set `upgradationEnabled` to `false` (not recommended). The `gapControlEnabled` parameter enables gap adjustments due to *fair* communication quality. 
 -   Lines 33, 35 and 40: These are the inter-vehicle gaps maintained in the ACC, PLOEG and CACC controllers, which are inherited from the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. You may choose to change them. 
 -   Lines 37, 38, 42, 43: The factor by which the inter-vehicle gaps are increased due to *fair* communication quality. In this example, the first five vehicles in the platoon increase the gap by 10%, and the rest increase their gaps by 25%. The rationale is that the rear vehicles experience more packet losses than the front ones due to path loss and fading effects. 
+
+## Emergency braking and ML parameters ##
 
 Emergency Braking Strategies' Parameters
 ----------------------------------------
