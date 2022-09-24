@@ -172,8 +172,18 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 - `Config sinusoidal-RTM` The platoon cruises in a sinusoidal fashion until the `sim-time-limit` is reached, and the platooning vehicles switch between the controllers and/or adjusts gap following the contracts in RTM module.
 - `Config RTM-CEBP` The platoon cruises in a sinusoidal fashion using the RTM and performs emergency braking at `40 s` into the simulation time using the CEBP braking strategy [(Bergenhem et al., 2018)](https://link.springer.com/chapter/10.1007/978-3-030-03424-5_26). You can specify the `DENMInterval` and whether the DENMs should be relayed by the mid vehicle in the platoon by defining the `isRelayEnabled` parameter.   
 - `Config RTM-AEB` The RTM is enabled during platoon cruising in a sinusoidal fashion, and the platoon performs emrgency braking using the AEB strategy. The vehicles perform soft deceleration at a rate specified in the `softDecelRate` parameter.  
-- `Config RTM-GD` The platoon cruises using the RTM and emrgency braking is performed using the Gradual Deceleration strategy [(Zheng et al., 2014)](https://ieeexplore.ieee.org/document/6766244). 
-- `Config RTM-SB` RTM is used during platoon cruising and Synchronized Braking [(Hasan et al., 2019)](https://ieeexplore.ieee.org/document/8891254) is used during emergency braking. $\tau_{wait}$ 
+- `Config RTM-GD` The platoon cruises using the RTM in a sinusoidal fashion and emrgency braking is performed using the Gradual Deceleration strategy [(Zheng et al., 2014)](https://ieeexplore.ieee.org/document/6766244). 
+- `Config RTM-SB` RTM is used during platoon cruising and Synchronized Braking [(Hasan et al., 2019)](https://ieeexplore.ieee.org/document/8891254) is used during emergency braking. A fixed $\tau_{wait}$ is specified by the user using `sbWaitTime` parameter. 
+- `Config RTM-SB-AvgDelay` RTM is used during cruising, Synchronized Braking is used during braking, and $\tau_{wait}$ is determined by taking the average of CAM delays during cruising. 
+- `Config RTM-SB-SVR` RTM and Synchronized Braking are used during cruising and braking, respectively. In this case, `Online SVR` is used for predicting the $\tau_{wait}$. The parameters specific to `Online SVR` are listed below:
+````
+*.node[*].prot.runSVR = true 
+*.node[*].prot.SVRSizeLimit = 5
+*.node[*].prot.SVRC = 0.03
+*.node[*].prot.SVREpsilon = 0.0001
+````
+- `Config RTM-SB-NN` RTM and synchronized braking are used during cruising and braking, respectively. `Neural Network` is used for predicting $\tau_{wait}$. In order to use `NN`, just set `*.node[*].prot.runNN` to `true`. 
+  
 
 Emergency Braking Strategies' Parameters
 ----------------------------------------
