@@ -219,7 +219,7 @@ All these scripts contain explanations by themself, but it is recommendable to c
 
 Implementation details of Runtime Manager
 =========================================
-Runtime Manager (RTM) is implemented as a separate [module](src/veins/modules/application/platooning/runtimeManager) in PlatoonSAFE. Every time a vehicle receives a platooning beacon, i.e., CAM, it is handled by the `onPlatoonBeacon` method in [BaseApp.cc](src/veins/modules/application/platooning/apps/BaseApp.cc) of Plexe. From here, the overridden `onPlatoonBeacon` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is called. 
+Runtime Manager (RTM) is implemented as a separate [module](src/veins/modules/application/platooning/runtimeManager) in PlatoonSAFE. Every time a vehicle receives a platooning beacon, i.e., CAM, it is handled by the `onPlatoonBeacon` method in [BaseApp.cc](src/veins/modules/application/platooning/apps/BaseApp.cc) of Plexe. From here, the overridden `onPlatoonBeacon` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is called. The `onPlatoonBeacon` method then logs the front and lead vehicles' data. The RTM mainly functions by monitoring the communication quality with the front and lead vehicles periodically. To this end, a `monitoringMsg` is initialized in  [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) and every `rmMonitorInterval` the `handleSelfMsg` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is invoked; please see the truncated version of `handleSelfMsg` method below.    
 
 
 
