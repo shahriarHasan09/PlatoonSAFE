@@ -37,7 +37,13 @@ The PlatoonSAFE simulator extends the `Plexe 2.1` version, which consists of `Pl
 sudo apt-get update
 sudo apt-get install default-jre python python3
 ````
-
+* **In order to run the ML algorithms, some libraries are required to be installed:**
+````
+sudo apt-get install python3-pip
+pip3 install numpy
+pip3 install tensorflow
+pip3 intall keras
+````
 ## PlatoonSAFE Installation guide in Linux ##
 1. First, install OMNeT++; the detailed installation guide for different operating systems can be found in [OMNeT++ website](https://doc.omnetpp.org/omnetpp/InstallGuide.pdf). Note that the `libosgearth` package required for 3D visualization in OMNeT++ `Qtenv` mode is no longer provided in Ubuntu 22.04. If you are using Ubuntu 22.04, install `libosgearth` from the source.  
 
@@ -101,15 +107,6 @@ cd ~/src/PlatoonSAFE
 make
 ````
 
-9. **In order to run the ML algorithms, some libraries are required to be installed:**
-
-````
-sudo apt-get install python3-pip
-pip3 install numpy
-pip3 install tensorflow
-pip3 intall keras
-````
-
 The installation process is now completed with this step.
 
 ## Running Simulations ##
@@ -143,13 +140,11 @@ For general issues related to OMNeT++, Plexe, or Veins, we recommend [Plexe FAQ 
 PlatoonSAFE Simulation Parameters
 =================================
 
-The simulation parameters required for evaluating RTM, ML algorithms and the braking strategies can be found in the files [RTMModule.ini](examples/human/RTMModule.ini) and [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini). The RTM parameters are listed in a separate `.ini` file in order to distinct them from the Plexe and Veins parameters. The `RTMModule.ini` file inherits the parameters of `RTM-CEB-ML.ini` file. As a result, when you run the `RTMModule.ini` file, you need to choose from the simulation configurations listed in the `RTM-CEB-ML.ini` file.        
+The simulation parameters required for evaluating RTM, ML algorithms and the braking strategies can be found in the files [RTMModule.ini](examples/human/RTMModule.ini) and [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini). The RTM parameters are listed in a separate `.ini` file in order to distinct them from the Plexe and Veins parameters. The `RTMModule.ini` file inherits the parameters of `RTM-CEB-ML.ini` file. As a result, when you run the `RTMModule.ini` file, you need to choose from the simulation configurations listed in the `RTM-CEB-ML.ini` file.
 
 Runtime Manager parameters
 --------------------------
-The simulation parameters of the [RTMModule.ini](examples/human/RTMModule.ini) file are depicted below. First, you need to enable the RTM by setting the `rmEnabled` parameter to `true`. If you wish not to use RTM during platoon cruising, rather prefer the control algorithms implemented in Plexe, e.g., PATH CACC, PLOEG CACC, etc., simply disable the RTMModule and define the desired controller using `*.node[*].scenario.controller = "CACC"` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. It can be useful should you want to experiment with the braking strategies and ML algorithms with a specific controller employed during cruising.   
-
-The parameters of Plexe simulator that specifies the PHY and MAC layer specifications, neighbouring traffic, beacon frequencies, controller parameters, and the simulated scenarios, are available in the `omnetpp.ini` file. Please refer to the Plexe documentation for the details of these parameters. The [`RMModule.ini`](/examples/human/RMModule.ini) file that specifies the Runtime Manager parameters inherits the parameters of `omnetpp.ini` file, Listing X.
+The simulation parameters of the [RTMModule.ini](examples/human/RTMModule.ini) file are depicted below. First, you need to enable the RTM by setting the `rmEnabled` parameter to `true`. If you wish not to use RTM during platoon cruising, rather prefer the control algorithms implemented in Plexe, e.g., PATH CACC, PLOEG CACC, etc., simply disable the RTMModule and define the desired controller using `*.node[*].scenario.controller = "CACC"` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. It can be useful should you want to experiment with the braking strategies and ML algorithms with a specific controller employed during cruising. Although the simulation parameters are well commented, we explain some of them for further clarification.            
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTMModule.ini#L1-L43
 
@@ -184,33 +179,12 @@ include omnetpp.ini
 ```
 -->
 
-The parameters of the Listing X are explained below:
+-   Line 12: The interval at which a beacon is expected from the lead or
+    front vehicle, defined by `beaconInterval` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. The duration of communication outage can also be expressed in terms of no. of packet losses. For instance, if `beaconInterval` is `0.1 s (100 ms)`, communication outage for `200 ms` can be interpreted as `two` packet losses.
 
--   Line 2: The `rmEnabled` has to be set `true` in order to use the
-    runtime manager, otherwise, default Plexe simulator will be run.
+-   Lines 14-17: These parameters are used for specifying the user defined contracts. If `readContractsFromInputFile` is set to `true` then the default contracts are ignored.
 
--   Line 3: The interval at which the runtime manager checks the
-    communication quality, safety distance, etc., based on which the
-    state of the vehicle may change, i.e., controller change, gap
-    adjustment, etc.
-
--   Line 4: The interval at which a beacon is expected from the lead or
-    front vehicle. This has to be set according to the beacon frequency
-    of the platooning vehicles. For instance, if the beacon frequency of
-    the platooning vehicles is 10 Hz then a beacon is expected every 100
-    ms. In addition, 5 ms is assumed as other delays. Therefore, if a
-    vehicle does not receive a beacon for the last 210 ms from the lead
-    vehicle, then 2 packet losses are assumed with respect to the lead
-    vehicle.
-
--   Lines 5-8: These parameters are used for specifying the user defined
-    contracts. If it is set to `true` then the default contracts are
-    ignored.
-
--   Lines 10-12: If there is a safety violation, i.e., the gap between
-    the vehicles become less than a predefined inter-vehicle distance
-    then safety condition is assumed to be violated, and it is recorded
-    in an output file.
+-   Lines 18: Any time during platooning, if safety is violated, e.g., the inter-vehicle gaps are less than a predefined safety distance (specified by `minSafetyDistance` in `line 29`), it is recorded in an output file that can be used for results analysis. 
 
 -   14-15: These two parameters define the thresholds for *fair, poor*
     communication thresholds. Please notice that the communication
