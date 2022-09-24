@@ -113,8 +113,8 @@ You can run the simulations from the IDE or the terminal. From IDE, simulations 
     PlatoonSAFE $\rightarrow$ set active $\rightarrow$ gcc-release).
 
 2.  Now, go to PlatoonSAFE $\rightarrow$ examples $\rightarrow$
-    safetyApps, and run [`RTMModule.ini`](/examples/human/RTMModule.ini). In order to run it, right click
-    on [`RTMModule.ini`](/examples/human/RTMModule.ini) $\rightarrow$ Run As $\rightarrow$ OMNeT++
+    safetyApps, and run [RTMModule.ini](examples/human/RTMModule.ini). In order to run it, right click
+    on [RTMModule.ini](examples/human/RTMModule.ini) $\rightarrow$ Run As $\rightarrow$ OMNeT++
     Simulation. An window should pop-up, select the configuration you want to run, e.g., sinusoidal-RTM, then press OK. On the top-left corner of
     the OMNeT++ Qtenv window, click on either of the fast or express
     buttons. This should start the simulation and a SUMO window should
@@ -133,7 +133,7 @@ For general issues related to OMNeT++, Plexe, or Veins, we recommend [Plexe FAQ 
 PlatoonSAFE Simulation Parameters
 =================================
 
-In this section, the parameters used to simulate the fail-operational and fail-safe features in the PlatoonSAFE simulator are explained.
+The simulation parameters required for evaluating RTM, ML algorithms and the braking strategies can be found in the files [RTMModule.ini](examples/human/RTMModule.ini) and [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini). 
 
 Runtime Manager parameters
 --------------------------
