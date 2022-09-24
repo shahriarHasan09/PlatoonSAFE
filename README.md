@@ -180,32 +180,16 @@ include omnetpp.ini
 -->
 
 -   Line 12: The interval at which a beacon is expected from the lead or
-    front vehicle, defined by `beaconInterval` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. The duration of communication outage can also be expressed in terms of no. of packet losses. For instance, if `beaconInterval` is `0.1 s (100 ms)`, communication outage for `200 ms` can be interpreted as `two` packet losses.
+    front vehicle, defined by `beaconInterval` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. The duration of communication outage can also be expressed in terms of no. of packet losses. For instance, if `beaconInterval` is `0.1 s (100 ms)`, a communication outage for `200 ms` can be interpreted as `two` packet losses.
 
 -   Lines 14-17: These parameters are used for specifying the user defined contracts. If `readContractsFromInputFile` is set to `true` then the default contracts are ignored.
 
 -   Lines 18: Any time during platooning, if safety is violated, e.g., the inter-vehicle gaps are less than a predefined safety distance (specified by `minSafetyDistance` in `line 29`), it is recorded in an output file that can be used for results analysis. 
 
--   14-15: These two parameters define the thresholds for *fair, poor*
-    communication thresholds. Please notice that the communication
-    qualities are divided into three categories and named *good, fair,
-    poor* in the PlatoonSAFE paper. However, in the simulator they are
-    called OK, POOR, CRITICAL. They are basically the same concept.
-    During the time of developing the simulator we assumed these names.
-    In a later version of the simulator, these names will be changed.
-    For now, please notice that *good*, *fair* and *poor* in the paper
-    corresponds to *OK*, *POOR*, and *CRITICAL*, respectively, in the
-    simulator.
-
--   Lines 24-28: In the paper, we mention three controllers, ACC, CACC,
-    and PLATOON, and there is a clear distinction between the CACC and
-    PLATOON controllers[^1]. In the Plexe simulator, the
-    ACC, CACC, and PLATOON controllers (as termed in the PlatoonSAFE
-    paper) are called as ACC, Ploeg, and CACC, respectively. The time
-    headway or distance gap of the controllers are read from the
-    omnetpp.ini file. The factor by which the distance with the front
-    vehicle is to be increased due to *fair* communication quality is
-    specified in Lines 26 and 28.
+-   Lines 14-15: The communication qualities *good*, *fair* and *poor* in the paper correspond to *OK*, *POOR*, and *CRITICAL*, respectively, in the simulator. These thresholds are represented by the number of packet losses. 
+-   Lines 24-26: For instance, if you want the platoon to continue cruising in the *degraded* modes which are adopted due to transient communication errors, set `upgradationEnabled` to `false` (not recommended). The `gapControlEnabled` parameter enables gap adjustments due to *fair* communication quality. 
+-   Lines 33, 35 and 40: These are the inter-vehicle gaps maintained in the ACC, PLOEG and CACC controllers, which are inherited from the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. You may choose to change them. 
+-   Lines 37, 38, 42, 43: The factor by which the inter-vehicle gaps are increased due to *fair* communication quality. In this example, the first five vehicles in the platoon increase the gap by 10%, and the rest increase their gaps by 25%. The rationale is that the rear vehicles experience more packet losses than the front ones due to path loss and fading effects. 
 
 Emergency Braking Strategies' Parameters
 ----------------------------------------
