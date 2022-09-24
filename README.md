@@ -137,12 +137,13 @@ The simulation parameters required for evaluating RTM, ML algorithms and the bra
 
 Runtime Manager parameters
 --------------------------
-The simulation parameters of the [RTMModule.ini](examples/human/RTMModule.ini) file are depicted below. First, you need to enable the RTM by setting the `rmEnabled` parameter to `true`. If you wish not to use RTM during platoon cruising, rather prefer the control algorithms implemented in Plexe, e.g., PATH CACC, PLOEG CACC, etc., simply disable the RTMModule and define the desired controller using `*.node[*].scenario.controller = "CACC"` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file.  
+The simulation parameters of the [RTMModule.ini](examples/human/RTMModule.ini) file are depicted below. First, you need to enable the RTM by setting the `rmEnabled` parameter to `true`. If you wish not to use RTM during platoon cruising, rather prefer the control algorithms implemented in Plexe, e.g., PATH CACC, PLOEG CACC, etc., simply disable the RTMModule and define the desired controller using `*.node[*].scenario.controller = "CACC"` in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file. It can be useful should you want to experiment with the braking strategies and ML algorithms with a specific controller employed during the cruising.   
 
 The parameters of Plexe simulator that specifies the PHY and MAC layer specifications, neighbouring traffic, beacon frequencies, controller parameters, and the simulated scenarios, are available in the `omnetpp.ini` file. Please refer to the Plexe documentation for the details of these parameters. The [`RMModule.ini`](/examples/human/RMModule.ini) file that specifies the Runtime Manager parameters inherits the parameters of `omnetpp.ini` file, Listing X.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTMModule.ini#L1-L43
 
+<!---
 ``` javascript {.line-numbers}
 include omnetpp.ini
 *.node[*].runtimeManager.rmEnabled = true
@@ -171,6 +172,7 @@ include omnetpp.ini
 *.node[*].runtimeManager.caccConstantSpacing    = ${caccSpacing}m
 *.node[*].runtimeManager.emergencyCaccConstantSpacingFactor = 0.25
 ```
+-->
 
 The parameters of the Listing X are explained below:
 
