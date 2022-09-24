@@ -162,6 +162,8 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 
 ## Emergency braking and ML parameters ##
 
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTM-CEB-ML.ini#L1-L416
+
 Emergency Braking Strategies' Parameters
 ----------------------------------------
 
