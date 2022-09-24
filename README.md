@@ -162,10 +162,14 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 
 ## Emergency braking and ML parameters ##
 The [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file contains several simulation configurations, one of which can be chosen, e.g., by openning the `run configurations` window (see the figure below).
+
 <img width="495" alt="run_configs" src="https://user-images.githubusercontent.com/93597343/192091080-b2c22058-fd44-48a1-849c-f47fecd918d1.png">
 
+Different `configs` represent different simulation scenarios. A short description of different `configs` is given below:
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTM-CEB-ML.ini#L1-L416
+
+- `Config sinusoidal-RTM` The platoon cruises in a sinusoidal fashion until the `sim-time-limit` is reached, and the platooning vehicles switch between the controllers and/or adjusts gap following the contracts in RTM module.
 
 Emergency Braking Strategies' Parameters
 ----------------------------------------
