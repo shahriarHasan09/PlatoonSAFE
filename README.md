@@ -219,6 +219,9 @@ All these scripts contain explanations by themself, but it is recommendable to c
 
 Implementation details of Runtime Manager
 =========================================
+Runtime Manager (RTM) is implemented as a separate [module](src/veins/modules/application/platooning/runtimeManager) in PlatoonSAFE. Every time a vehicle receives a platooning beacon, i.e., CAM, it is handled by the `onPlatoonBeacon` method in [BaseApp.cc](src/veins/modules/application/platooning/apps/BaseApp.cc) of Plexe. From here, the overridden `onPlatoonBeacon` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is called. 
+
+
 
 The code of the Runtime Manager can be found in the directory [`runtimeManager`](src/veins/modules/application/platooning/runtimeManager). The Runtime Manager is implemented as a separate module in the Plexe
 simulation framework. platooning application can access to it through
