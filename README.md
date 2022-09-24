@@ -1,16 +1,8 @@
-![image](images/user_manual/logo_mdh.jpg)\
-------------------------------------------------------------------------
+# PlatoonSAFE User Guide
 
-\
-\
+S. Hasan, J. Gorospe, S. Girs, A. A. Gomez, and E. Uhlemann, “PlatoonSAFE: An Integrated Simulation Tool for Evaluating
+Platoon Safety with Fault Tolerance Mechanisms and ML Algorithms” in Proc. X, Y, Z, 2022.
 
-------------------------------------------------------------------------
-
-\
-
-Shahriar Hasan and Joseba Gorospe\
-
-\
 
 Introduction
 ============
