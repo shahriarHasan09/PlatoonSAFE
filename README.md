@@ -161,6 +161,9 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 -   Lines 37, 38, 42, 43: The factor by which the inter-vehicle gaps are increased due to *fair* communication quality. In this example, the first five vehicles in the platoon increase the gap by 10%, and the rest increase their gaps by 25%. The rationale is that the rear vehicles experience more packet losses than the front ones due to path loss and fading effects. 
 
 ## Emergency braking and ML parameters ##
+The [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file contains several simulation configurations, one of which can be chosen, e.g., by openning the `run configurations` window (see the figure below).
+<img width="495" alt="run_configs" src="https://user-images.githubusercontent.com/93597343/192091080-b2c22058-fd44-48a1-849c-f47fecd918d1.png">
+
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTM-CEB-ML.ini#L1-L416
 
