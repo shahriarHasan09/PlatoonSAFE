@@ -165,13 +165,15 @@ The [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) file contains several simula
 
 <img width="495" alt="run_configs" src="https://user-images.githubusercontent.com/93597343/192091080-b2c22058-fd44-48a1-849c-f47fecd918d1.png">
 
-Different `configs` represent different simulation scenarios. A short description of different `configs` is given below:
+Different `configs` specified in the [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini) represent different simulation scenarios. A short description of different `configs` is given below:
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094843b7fd0f70c/examples/human/RTM-CEB-ML.ini#L1-L416
 
 - `Config sinusoidal-RTM` The platoon cruises in a sinusoidal fashion until the `sim-time-limit` is reached, and the platooning vehicles switch between the controllers and/or adjusts gap following the contracts in RTM module.
-- `Config RTM-CEBP` The platoon cruises in a sinusoidal fashion using the RTM and performs emergency braking at `40 s` into the simulation time using the CEBP braking strategy [(Bergenhem et al., 2018)](https://link.springer.com/chapter/10.1007/978-3-030-03424-5_26).  
-- 
+- `Config RTM-CEBP` The platoon cruises in a sinusoidal fashion using the RTM and performs emergency braking at `40 s` into the simulation time using the CEBP braking strategy [(Bergenhem et al., 2018)](https://link.springer.com/chapter/10.1007/978-3-030-03424-5_26). You can specify the `DENMInterval` and whether the DENMs should be relayed by the mid vehicle in the platoon by defining the `isRelayEnabled` parameter.   
+- `Config RTM-AEB` The RTM is enabled during platoon cruising in a sinusoidal fashion, and the platoon performs emrgency braking using the AEB strategy. The vehicles perform soft deceleration at a rate specified in the `softDecelRate` parameter.  
+- `Config RTM-GD` The platoon cruises using the RTM and emrgency braking is performed using the Gradual Deceleration strategy [(Zheng et al., 2014)](https://ieeexplore.ieee.org/document/6766244). 
+- `Config RTM-SB` RTM is used during platoon cruising and Synchronized Braking [(Hasan et al., 2019)](https://ieeexplore.ieee.org/document/8891254) is used during emergency braking. $\tau_{wait}$ 
 
 Emergency Braking Strategies' Parameters
 ----------------------------------------
