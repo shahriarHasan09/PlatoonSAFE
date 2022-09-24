@@ -232,32 +232,8 @@ void RuntimeManager::handleSelfMsg(cMessage* msg) {
     }
 }
 ````
+The `egoLog` method logs the ego vehicle data, e.g., active controller, simulation time, acceleration, etc., and the `safetyViolationCheck` method checks if the inter-vehicle gaps are smaller than the `minSafetyDistance` specified in [RTMModule.ini](examples/human/RTMModule.ini). The `evaluate` method is probably the most important one. Every `rmMonitorInterval` the `evaluate` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) invokes the `evaluate` method in [Contracts.cc](src/veins/modules/application/platooning/runtimeManager/Contracts.cc), where RTM searches for a contract from the `rmContractsList` for the current communication quality, i.e., good, fair or poor, and the corresponding `Guarantee` is provided. Please follow the flow of codes from the `evaluate` method in [Contracts.cc](src/veins/modules/application/platooning/runtimeManager/Contracts.cc).   
 
-
-The code of the Runtime Manager can be found in the directory [`runtimeManager`](src/veins/modules/application/platooning/runtimeManager). The Runtime Manager is implemented as a separate module in the Plexe
-simulation framework. platooning application can access to it through
-the `onPlatoonBeacon()` method of the `Runtime Manager` interface. This
-method is called from platooning application every time a vehicle
-receives a beacon from any of the vehicle in the platoon. Runtime
-manager is designed to perform three different tasks: logging,
-monitoring and taking actions based on monitored state of the vehicle.
-Logging is done for front, leader and ego vehicles. Front and lead
-vehicle's data are logged whenever the ego vehicle receives platooning
-beacon, and this is invoked from the `onPlatoonBeacon()` method of
-platooning application. `Runtime Manager` logs the ego vehicle's
-information to be used in the safety violation check during monitoring.
-Monitoring by `Runtime Manager` is carried out periodically at an
-interval of `rmMonitorInterval`. Upon receiving a monitoring
-`selfMessage`, runtime manager starts logging the information of the ego
-vehicle required for safety violation check, such as currently active
-controller (`ACC, CACC, Ploeg`), maximum deceleration, distance to the
-front vehicle, and the simulation time when the data was computed. These
-information are then processed in safety evaluation step and reported to
-an output file if distance to the front vehicle or maximum deceleration
-violate the user defined threshold values. The methods implementing the
-logging, evaluating, monitoring, and scheduling tasks can be found in
-the [`RuntimeManager.cc`](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) file. Moreover, in the *runtimeManager.\** class, vehicle colors are set to demonstrate the active controller
-employed in a vehicle that can be seen in the SUMO GUI.
 
 Assumption/Guarantee
 --------------------
