@@ -176,6 +176,7 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 ````
 - `Config RTM-SB-NN` RTM and synchronized braking are used during cruising and braking, respectively. `Neural Network` is used for predicting $\tau_{wait}$. In order to use `NN`, just set `*.node[*].prot.runNN` to `true`. Note that a pthon script is required to be executed in order to run NN (more details are provided below).
 
+## Running the NN Algorithm ##
 
 Results collection and Analysis
 ===============================
@@ -217,7 +218,7 @@ All these scripts contain explanations by themself, but it is recommendable to c
 
 
 
-Implementation details of Runtime Manager
+Implementation of Runtime Manager
 =========================================
 Runtime Manager (RTM) is implemented as a separate [module](src/veins/modules/application/platooning/runtimeManager) in PlatoonSAFE. Every time a vehicle receives a platooning beacon, i.e., CAM, it is handled by the `onPlatoonBeacon` method in [BaseApp.cc](src/veins/modules/application/platooning/apps/BaseApp.cc) of Plexe. From here, the overridden `onPlatoonBeacon` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is called. The `onPlatoonBeacon` method then logs the front and lead vehicles' data. The RTM mainly functions by monitoring the communication quality with the front and lead vehicles periodically. To this end, a `monitoringMsg` is initialized in  [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) and every `rmMonitorInterval` the `handleSelfMsg` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is invoked; please see the truncated version of `handleSelfMsg` method below.    
 
@@ -383,6 +384,9 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357
 ::contract[ctype=value : c2f=value ; c2l=value; mode=value : transition2mode=value;
 dist2pred=value]
 ```
+
+Implementation of ML Algorithms
+===============================
 
 Implementation of the Braking Strategies
 ========================================
