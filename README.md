@@ -373,8 +373,9 @@ transition2mode=value ; dist2pred=value
 
 Based on the rules defined above, there are two possible formats that a user can use to define their contracts as shown in the code snippet below. The first format is to be used when one of the guarantees, e.g., `ChangeController`, is provided, and the second one is to be used when both the guarantees are provided, i.e., `ChangeControllerAndAdjustGap2Front`.
 
-https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt#L61-L62
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt#L61-L63
 
+Please refer to the [`contracts.txt`](src/veins/modules/application/platooning/runtimeManager/input/contracts.txt) file for further details and examples.
 
 Implementation of ML Algorithms
 ===============================
