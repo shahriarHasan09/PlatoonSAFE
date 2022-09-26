@@ -221,7 +221,7 @@ All these scripts contain explanations by themself, but it is recommendable to c
 
 
 Implementation of Runtime Manager
-=========================================
+=================================
 Runtime Manager (RTM) is implemented as a separate [module](src/veins/modules/application/platooning/runtimeManager) in PlatoonSAFE. Every time a vehicle receives a platooning beacon, i.e., CAM, it is handled by the `onPlatoonBeacon` method in [BaseApp.cc](src/veins/modules/application/platooning/apps/BaseApp.cc) of Plexe. From here, the overridden `onPlatoonBeacon` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is called. The `onPlatoonBeacon` method then logs the front and lead vehicles' data. The RTM mainly functions by monitoring the communication quality with the front and lead vehicles periodically. To this end, a `monitoringMsg` is initialized in  [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) and every `rmMonitorInterval` the `handleSelfMsg` method in [RuntimeManager.cc](src/veins/modules/application/platooning/runtimeManager/RuntimeManager.cc) is invoked; please see the truncated version of `handleSelfMsg` method below.    
 
 ```` cpp
@@ -316,30 +316,14 @@ If a user wants to implement a new `Assumption`, they only require to derive a n
 
 User Defined Contracts
 ----------------------
-
-The PlatoonSAFE simulator facilitates user defined contracts. This is
-motivated by the fact that a user can define their own contracts without
-having deep knowledge on the OMNeT++ simulation framework. It is
-possible to modify the `.txt` file to accommodate such user defined
-contracts. The file is located in [`contracts.txt`](src/veins/modules/application/platooning/runtimeManager/input/contracts.txt). A parser is developed to parse the input to the OMNeT++ `contract` class type. The parser grammar can be found in the directory [`rmParser/parserGrammars`](src/veins/modules/application/platooning/runtimeManager/rmParser/parserGrammars/). If a user defines their own contracts they need to set the `readContractFromInputFile` parameter in the [`RMModule.ini`](/examples/human/RMModule.ini) file to `true`; in that case, the default contracts will be ignored.
+The PlatoonSAFE simulator facilitates user defined contracts so that a user can define their own contracts without
+having deep knowledge on the OMNeT++ simulation framework. It is possible to modify the [`contracts.txt`](src/veins/modules/application/platooning/runtimeManager/input/contracts.txt) file to accommodate such user defined
+contracts. A parser is developed to parse the input to the OMNeT++ `contract` class type. The parser grammar can be found in the directory [`rmParser/parserGrammars`](src/veins/modules/application/platooning/runtimeManager/rmParser/parserGrammars/). If a user defines their own contracts they need to set the `readContractFromInputFile` parameter in the [`RMModule.ini`](/examples/human/RMModule.ini) file to `true` and the the path in`contractInputFilename` should be changed. In that case, RTM default contracts will be ignored. The input format of a user defined contract is depicted below.  
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt#L13-L14
 
-``` {#listing:contract_format numbers="none" caption="Input format for user defined {\\tt Contract}" label="listing:contract_format"}
-::contract[Type : comma/space separated Assumption variables : 
-comma/space separated Guarantee variables]
-```
+The components of `Contract`, `Type`, `Assumption`, and `Guarantee` are defined as a collection of `key` and `value` pair. The keys and their corresponding values available in PlatoonSAFE are depicted in the Table below. 
 
-The input format of a user defined contract is depicted in Listing
-X. The components of `Contract`, `Type`, `Assumption`, and `Guarantee` are defined as a collection of `key` and `value` pair. The keys and their corresponding values available in the current PlatoonSAFE implementation are depicted in Table X. For instance, the components of Assumption are as Listing X, and their corresponding values are to be chosen from the Table X. Similarly, the components of the Guarantee are depicted in Listing X, and the values should be chosen from the Guarantee row of Table X.
-
-``` {#listing:contract_assumption_order numbers="none" caption="Order of pairs of {\\tt Assumption} component" label="listing:contract_assumption_order"}
-c2f=value ; c2l=value ; mode=value
-```
-
-``` {#listing:contract_guarantee_order numbers="none" caption="Order of pairs of {\\tt Guarantee} component" label="listing:contract_guarantee_order"}
-transition2mode=value ; dist2pred=value
-```
 
 <table>
     <tr>
@@ -377,15 +361,20 @@ transition2mode=value ; dist2pred=value
 </table>
 
 
-Based on the rules defined above, there are two possible formats that a user can use to define their contracts, and it is depicted in Listing X. The first format is to be used when one of the guarantees is provided, and the second one is to be used when both the guarantees are provided.
+For instance, the components of Assumption and Guarantee are as depicted in the following code snippet, and their corresponding values are to be chosen from the Table above. 
+
+``` {#listing:contract_assumption_order numbers="none" caption="Order of pairs of {\\tt Assumption} component" label="listing:contract_assumption_order"}
+c2f=value ; c2l=value ; mode=value
+```
+
+``` {#listing:contract_guarantee_order numbers="none" caption="Order of pairs of {\\tt Guarantee} component" label="listing:contract_guarantee_order"}
+transition2mode=value ; dist2pred=value
+```
+
+Based on the rules defined above, there are two possible formats that a user can use to define their contracts as shown in the code snippet below. The first format is to be used when one of the guarantees, e.g., `ChangeController`, is provided, and the second one is to be used when both the guarantees are provided, i.e., `ChangeControllerAndAdjustGap2Front`.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/796c4232fe1ff68e2db9313ae357869845d5b562/src/veins/modules/application/platooning/runtimeManager/input/contracts.txt#L61-L62
 
-``` {#listing:contract_option caption="Two possible combination of {\\tt Contract} input format" label="listing:contract_option"}
-::contract[ctype=value : c2f=value ; c2l=value; mode=value : transition2mode=value]
-::contract[ctype=value : c2f=value ; c2l=value; mode=value : transition2mode=value;
-dist2pred=value]
-```
 
 Implementation of ML Algorithms
 ===============================
