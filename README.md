@@ -177,6 +177,8 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 - `Config RTM-SB-NN` RTM and synchronized braking are used during cruising and braking, respectively. `Neural Network` is used for predicting $\tau_{wait}$. In order to use `NN`, just set `*.node[*].prot.runNN` to `true`. Note that a pthon script is required to be executed in order to run NN (more details are provided below).
 
 ## Running the NN Algorithm ##
+The scripts to run the NN goes here, but not the detailed description of how NN has been integrated. 
+
 
 Results collection and Analysis
 ===============================
@@ -387,6 +389,10 @@ dist2pred=value]
 
 Implementation of ML Algorithms
 ===============================
+- How the ML algorithms has been integrated (with code snippets)
+- How data from the last vehicle ae relayed to the LV
+- Which lines of codes a user is required to play with in order to use the algorithms for some other purposes.
+
 
 Implementation of the Braking Strategies
 ========================================
