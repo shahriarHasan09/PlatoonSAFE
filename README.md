@@ -29,13 +29,19 @@ The PlatoonSAFE simulator extends the `Plexe 2.1` version, which consists of `Pl
 sudo apt-get update
 sudo apt-get install default-jre python python3
 ````
-* **In order to run the ML algorithms, some libraries are required to be installed:**
+* In order to run the ML algorithms, some libraries are required to be installed:
 ````
 sudo apt-get install python3-pip
 pip3 install numpy
 pip3 install tensorflow
 pip3 intall keras
 ````
+* Finally, some external script to post process simulation results will also need the following libraries
+````
+pip3 install pandas
+pip3 install matplotlib
+````
+_[requirements.txt](examples/human/externalScripts/requirements.txt) contains the versions of all the python libraries that are used for ML and post processing_
 ## PlatoonSAFE Installation guide in Linux ##
 1. First, install OMNeT++; the detailed installation guide for different operating systems can be found in [OMNeT++ website](https://doc.omnetpp.org/omnetpp/InstallGuide.pdf). Note that the `libosgearth` package required for 3D visualization in OMNeT++ `Qtenv` mode is no longer provided in Ubuntu 22.04. If you are using Ubuntu 22.04, install `libosgearth` from the source.  
 
