@@ -183,16 +183,50 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 - `Config RTM-SB-NN` RTM and synchronized braking are used during cruising and braking, respectively. `Neural Network` is used for predicting $\tau_{wait}$. In order to use `NN`, just set `*.node[*].prot.runNN` to `true`. Note that a pthon script is required to be executed in order to run NN (more details are provided below).
 
 ## Running the NN Algorithm ##
-The scripts to run the NN goes here, but not the detailed description of how NN has been integrated. 
+NN algorithm is not integrated into PlatoonSAFE but it is connected to it using a UDP connection. Therefore, in order to run `Config RTM-SB-NN`, it is necessary to run the NN externaly first. 
 
+[`runSimNN.py`](examples/human/externalScripts/runSimNN.py) is the main script that runs the simulations using the NN defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py). It connects to PlatoonSAFE simulator via UDP to exchange communication delays in the LeadVehicle of the platoon and predict thefuture ones. This script is only prepared to run one scenario, but with multiple seeds. This script will run the simulations as a terminal command. If the user want to execute only the NN and start the simulator from OMNet++, `runSimNN.py` must be changed to something similar to this:
+
+```` python
+import NNServerThread
+import time
+
+def main():
+    # Run NN thread
+    t1 = NNServerThread.thread_with_trace(target = NNServerThread.runNN)
+    t1.start()
+    # Wait 5 seconds to ensure NN Thread is on
+    time.sleep(5)
+    # Start simulation in OMNet++
+    print('Start simulation in OMNet++')
+    t1.join()
+
+if __name__ == "__main__":
+    main()
+
+````
+The NN is defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py) and the users can change the structure (Lines 58-63), the number of past samples used to predict (WD_SAMPLES Line 54), the optimizer (Line 64) or the learning rate (Line 57). Regarding the number of predictions, we are using a single prediction for the communication delay, therefore, the NN must give a single output (WD_PRED Line 55). 
+
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/5aab8e2d0c021ef3f8ab3a8f8fbee5fe07e6640f/examples/human/externalScripts/NNServerThread.py#L54-L64
+
+UDP connection can also be changed (port, address), adapting both NN and PlatoonSAFE, [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py) and [`AIAlgorithms.cc`](src/veins/modules/AI/AIAlgorithms.cc) (function *getNNServerAdd()*).
+
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/5aab8e2d0c021ef3f8ab3a8f8fbee5fe07e6640f/examples/human/externalScripts/NNServerThread.py#L48-L51
+
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/5aab8e2d0c021ef3f8ab3a8f8fbee5fe07e6640f/src/veins/modules/AI/AIAlgorithms.cc#L43-L51
+
+This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
+
+```
+cd src/examples/human/externalScripts/
+python3 runSimNN.py
+```
 
 Results collection and Analysis
 ===============================
 PlatoonSAFE includes several scripts to help the user collect and analize results of simulations. All these scripts are located in [`externalScripts`](src/examples/human/externalScripts/) and they can be used for the following purposes:
 
 1. **Automatize simulations** to run different scenarios.
-
-2. **Run Neural Network** simulations with PlatoonSAFE.
 
 3. **Extract information** from `.vec` files.
 
@@ -203,13 +237,6 @@ PlatoonSAFE includes several scripts to help the user collect and analize result
 ```
 cd src/examples/human/externalScripts/
 python3 runSimulations.py
-```
-
-[`runSimNN.py`](examples/human/externalScripts/runSimNN.py) is the main script that runs the simulations using the NN defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py). It connects to PlatoonSAFE simulator via UDP to exchange communication delays in the LeadVehicle of the platoon and predict thefuture ones. This script is only prepared to run one scenario, but with multiple seeds. The structure of the NN can be changed in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py). UDP connection can also be changed (port, address). Remember to adapt boths sides, [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py) and [`AIAlgorithms.cc`](src/veins/modules/AI/AIAlgorithms.cc) (function *getNNServerAdd()*)This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
-
-```
-cd src/examples/human/externalScripts/
-python3 runSimNN.py
 ```
 
 [`simUtils.py`](examples/human/externalScripts/simUtils.py) contains a function *createResultCSV* that converts resutls from PlatoonSAFE (`.vec`) into `.csv` files with the following structure: *ParameterName*, *VehicleID*, *SimulationTime*, *ParameterValue*. During this format conversion, the script also computes three important metrics required for analysing emergency braking strategies: inter-vehicle collisions, stopping distance of the LV, and the total time required for the whole platoon to transition to the fail-safe state from when braking started. [`resultsFromVec.py`](examples/human/externalScripts/resultsFromVec.py) contains an example of how this function can be used to extrac results from several vector files obtained after executing several simulations.
@@ -386,8 +413,14 @@ Please refer to the [`contracts.txt`](src/veins/modules/application/platooning/r
 Implementation of ML Algorithms
 ===============================
 - How the ML algorithms has been integrated (with code snippets)
-- How data from the last vehicle ae relayed to the LV
+AIAlgorithms.cc
+
 - Which lines of codes a user is required to play with in order to use the algorithms for some other purposes.
+
+- How data from the last vehicle ae relayed to the LV
+BaseProtocol
+
+
 
 
 Implementation of the Braking Strategies
