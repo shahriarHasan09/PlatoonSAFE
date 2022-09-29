@@ -2,6 +2,7 @@
 
 namespace Veins {
 
+// Initialize SVR algorithm with specific parameters. TODO: Not working if called from a different isntance
 void setupSVR(double SVREpsilon, double SVRC, OnlineSVR *SVR) {
     SVR = new OnlineSVR();
     // Set parameters
@@ -12,14 +13,7 @@ void setupSVR(double SVREpsilon, double SVRC, OnlineSVR *SVR) {
     SVR->SetVerbosity(OnlineSVR::VERBOSITY_NORMAL);
 }
 
-int setupNNConnection() {
-    int cliSockDes = 0;
-    if ((cliSockDes = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        perror("socket creation error...\n");
-    }
-    return cliSockDes;
-}
-
+// Predict a new communication delay using the last received value and retrain the algorithm
 void predictWithSVRAndTrain(double *lastRecordedDelayAtLV,
         double *predictedDelayAtLV, double *PredErrorAtLV,
         double realDelayOfLastVeh, int SVRSizeLimit, OnlineSVR *SVR) {
@@ -29,17 +23,28 @@ void predictWithSVRAndTrain(double *lastRecordedDelayAtLV,
     X1->Add(*lastRecordedDelayAtLV);
     TestSetX->AddRowRef(X1);
     *lastRecordedDelayAtLV = realDelayOfLastVeh;
+    // Predict new value
     Vector<double> *y = SVR->Predict(TestSetX);
     *predictedDelayAtLV = y->GetValue(0);
+    // Calculate error
     *PredErrorAtLV = *predictedDelayAtLV - realDelayOfLastVeh;
+
     SVR->Train(X1, realDelayOfLastVeh);
-//  predictedDelayOut.record(predictedDelayAtLV);
-//  predictionErrorOut.record(*PredErrorAtLV);
     if (SVR->GetSamplesTrainedNumber() > SVRSizeLimit) {
         SVR->Forget(0);
     }
 }
 
+// Initialize UDP socket for NN connection
+int setupNNConnection() {
+    int cliSockDes = 0;
+    if ((cliSockDes = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("socket creation error...\n");
+    }
+    return cliSockDes;
+}
+
+// Configure the address of the UDP connection from the NN script
 sockaddr_in getNNServerAdd() {
 
     struct sockaddr_in serAddr;
@@ -50,23 +55,29 @@ sockaddr_in getNNServerAdd() {
     return serAddr;
 }
 
+
+// Send last received communication delay to NN script and receive the prediction
 void predictWithNN(int cliSockDes, double realDelayOfLastVeh, int *numPrev,
         sockaddr_in serAddr, double *lastRecordedDelayAtLV,
         double *predictedDelayAtLV, double *PredErrorAtLV) {
     char buff[1024] = { 0 };
+    // Send delay information to NN via UDP
     sendto(cliSockDes, std::to_string(realDelayOfLastVeh).c_str(),
             std::to_string(realDelayOfLastVeh).size(), 0,
             (struct sockaddr*) &serAddr, sizeof(serAddr));
+
+    // Counter to know how many delays have been send already
     (*numPrev)++;
+
     *lastRecordedDelayAtLV = realDelayOfLastVeh;
     socklen_t serAddrLen = sizeof(serAddr);
+
+    // Check if NN has at least 10 samples to predict.
     if ((*numPrev) > 10) {
         recvfrom(cliSockDes, buff, 1024, 0, (struct sockaddr*) &serAddr,
                 &serAddrLen);
         *predictedDelayAtLV = std::stod(buff);
         *PredErrorAtLV = *predictedDelayAtLV - realDelayOfLastVeh;
-        //predictedDelayOut.record(predictedDelayAtLV);
-        //predictionErrorOut.record(PredErrorAtLV);
     }
 }
 }
