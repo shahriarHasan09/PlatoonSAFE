@@ -412,14 +412,22 @@ Please refer to the [`contracts.txt`](src/veins/modules/application/platooning/r
 
 Implementation of ML Algorithms
 ===============================
-- How the ML algorithms has been integrated (with code snippets)
-AIAlgorithms.cc
 
-- Which lines of codes a user is required to play with in order to use the algorithms for some other purposes.
+Two ML algorithms have been integrated into PlatoonSAFE, NN and Online SVR. NN is implemented in python ([NNServerThread.py](examples/human/externalScripts/NNServerThread.py)) and connected to PlatoonSAFE via UDP. Online SVR is a C++ module ([OnlineSVR](src/veins/modules/AI/OnlineSVR)). In addition, to facilitate the use of these two algorithms, all the functions have been collected into [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc).
 
-- How data from the last vehicle ae relayed to the LV
-BaseProtocol
+Regarding Online SVR, `setupSVR` function can be used to initialize an instance of the algorithm, defining parameters such as C or $\epsilon$ and `predictWithSVRAndTrain` is used to to make a new prediction and retrain the algorithm to prepare it for the next usage. For the NN, `setupNNConnection` is the function that initialize the UDP connection to the NN script,  `getNNServerAdd` is the function where the UDP connectivity is configured and `predictWithNN` is used to send a new value to the NN and receive the prediction. 
 
+The user can change the values of the parameters of the SVR from [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini): 
+
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/8d9fc19e99b50f2dba810309346066fd5460ecbf/examples/human/RTM-CEB-ML.ini#L370-L372
+
+In this case, we have used these ML algorithms to enhance an emergency braking strategy in a platooning scenario. The aim is to predict the optimal $\tau_{wait}$ for Synchronized Braking. For these, the last vehicle of the platoon will send `DelayMessage` whenever it receives a CAM message from the LV. The LV will receive the information of the delay that a message suffers to communicate from the first to the last vehicle and it will use it to predict the future delay, which will be set as $\tau_{wait}$, or time that platooning vehicles should wait to start braking all of them together.
+
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/8d9fc19e99b50f2dba810309346066fd5460ecbf/src/veins/modules/application/platooning/protocols/BaseProtocol.cc#L606-L622
+
+The user can also activate the option to add relay messages for DelayMessage. If so, the mid vehicle of the platoon will relay these type of messages. The LV will be waiting for DelayMessage from the last vehicle, but in case that they are lost, it will also check for the relay messages. This option increases the probability to receave the delay information in the LV but it makes the communication channel more busy.
+
+https://github.com/shahriarHasan09/PlatoonSAFE/blob/8d9fc19e99b50f2dba810309346066fd5460ecbf/src/veins/modules/application/platooning/protocols/BaseProtocol.cc#L633-L642
 
 
 
