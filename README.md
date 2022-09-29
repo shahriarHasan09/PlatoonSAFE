@@ -425,7 +425,7 @@ In this case, we have used these ML algorithms to enhance an emergency braking s
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/8d9fc19e99b50f2dba810309346066fd5460ecbf/src/veins/modules/application/platooning/protocols/BaseProtocol.cc#L606-L622
 
-The user can also activate the option to add relay messages for DelayMessage. If so, the mid vehicle of the platoon will relay these type of messages. The LV will be waiting for DelayMessage from the last vehicle, but in case that they are lost, it will also check for the relay messages. This option increases the probability to receave the delay information in the LV but it makes the communication channel more busy.
+The user can also activate the option to add relay messages for `DelayMessage`. If so, the mid vehicle of the platoon will relay these type of messages. The LV will be waiting for `DelayMessage` from the last vehicle, but in case that they are lost, it will also check for the relay messages. This option increases the probability to receave the delay information in the LV but it makes the communication channel more busy.
 
 https://github.com/shahriarHasan09/PlatoonSAFE/blob/8d9fc19e99b50f2dba810309346066fd5460ecbf/src/veins/modules/application/platooning/protocols/BaseProtocol.cc#L633-L642
 
