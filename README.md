@@ -434,7 +434,26 @@ The user can also activate the option to add relay messages for `DelayMessage`. 
 Implementation of the Braking Strategies
 ========================================
 
-The emergency braking strategies are implemented in [`BaseProtocol.cc`](src/veins/modules/application/platooning/protocols/BaseProtocol.cc) and [`BaseProtocol.h`](src/veins/modules/application/platooning/protocols/BaseProtocol.h) files of the Plexe simulator. The reason is that the developers of the Plexe simulator implement the creation of CAMs and the handling of the CAMs received from other vehicles in these files. In addition, we create two other message types called `BrakingPacket` and `ackPkt`. The `BrakingPacket` acts as the DENM, and the `ackPkt` acts as the ACKs required in the AEB and CEBP strategies. For the details of how to create messages in OMNeT++, please refer to the OMNeT++ user manual.
+The emergency braking strategies are implemented in [`BaseProtocol.cc`](src/veins/modules/application/platooning/protocols/BaseProtocol.cc) and [`BaseProtocol.h`](src/veins/modules/application/platooning/protocols/BaseProtocol.h) files. First, we need to schedule a DENM at the time the imaginary road hazard takes place. Then the DENM is required to be repeated every `DENMInterval`. To this end, we initialize the braking message at the braking time as follows:
+````
+brakingMessage = new cMessage("brakingMessage");
+if (simTime() > brakeAtTime) {
+    brakeAtTime = simTime();
+    scheduleAt(simTime(), brakingMessage);
+} else {
+    scheduleAt(brakeAtTime, brakingMessage);
+}
+````
+Now, remember that a message created using the `scheduleAt` function goes to the `handleSelfMsg` method at the time the message is scheduled. Therefore, from the `handleSelfMsg` method, the `brakingMessage` are repeated as follows:
+````
+void BaseProtocol::handleSelfMsg(cMessage *msg) {
+sendBrakingMessage(-1);
+scheduleAt(simTime() + DENMInterval, brakingMessage);
+}
+````
+The DENMs are broadcasted using the `sendBrakingMessage`, then they are repeated every `DENMInterval`. Inside the `sendBrakingMessage` method, one can include the information required for the following vehicles to perform braking. To that end, we need to create a packet with OMNeT++ `.msg` files for every type of messages that we want to broadcast. See [BrakingPacket.msg](src/veins/modules/application/platooning/messages/BrakingPacket.msg) as an example. This is the basic mechanism of creating event driven or periodic messages. How a following vehicle in a platoon should act upon receiving a DENM depends on the braking strategy itselft. 
+
+The reason is that the developers of the Plexe simulator implement the creation of CAMs and the handling of the CAMs received from other vehicles in these files. In addition, we create two other message types called `BrakingPacket` and `ackPkt`. The `BrakingPacket` acts as the DENM, and the `ackPkt` acts as the ACKs required in the AEB and CEBP strategies. For the details of how to create messages in OMNeT++, please refer to the OMNeT++ user manual.
 
 In the initialization of the `BaseProtocol.*`, we first check if the
 vehicle is the lead vehicle in the platoon and whether the time at which
