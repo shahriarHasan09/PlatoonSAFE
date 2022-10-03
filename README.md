@@ -205,15 +205,6 @@ if __name__ == "__main__":
     main()
 
 ````
-The NN is defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py) and the users can change the structure (Lines 58-63), the number of past samples used to predict (WD_SAMPLES Line 54), the optimizer (Line 64) or the learning rate (Line 57). Regarding the number of predictions, we are using a single prediction for the communication delay, therefore, the NN must give a single output (WD_PRED Line 55). 
-
-https://github.com/shahriarHasan09/PlatoonSAFE/blob/5aab8e2d0c021ef3f8ab3a8f8fbee5fe07e6640f/examples/human/externalScripts/NNServerThread.py#L54-L64
-
-UDP connection can also be changed (port, address), adapting both NN and PlatoonSAFE, [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py) and [`AIAlgorithms.cc`](src/veins/modules/AI/AIAlgorithms.cc) (function *getNNServerAdd()*).
-
-https://github.com/shahriarHasan09/PlatoonSAFE/blob/5aab8e2d0c021ef3f8ab3a8f8fbee5fe07e6640f/examples/human/externalScripts/NNServerThread.py#L48-L51
-
-https://github.com/shahriarHasan09/PlatoonSAFE/blob/5aab8e2d0c021ef3f8ab3a8f8fbee5fe07e6640f/src/veins/modules/AI/AIAlgorithms.cc#L43-L51
 
 This script should be run from its folder, it they are moved to somewhere else, all paths in the script shall be adapted.
 
@@ -415,11 +406,25 @@ Implementation of ML Algorithms
 
 Two ML algorithms have been integrated into PlatoonSAFE, NN and Online SVR. NN is implemented in python ([NNServerThread.py](examples/human/externalScripts/NNServerThread.py)) and connected to PlatoonSAFE via UDP. Online SVR is a C++ module ([OnlineSVR](src/veins/modules/AI/OnlineSVR)). In addition, to facilitate the use of these two algorithms, all the functions have been collected into [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc).
 
-Regarding Online SVR, `setupSVR` function can be used to initialize an instance of the algorithm, defining parameters such as C or $\epsilon$ and `predictWithSVRAndTrain` is used to to make a new prediction and retrain the algorithm to prepare it for the next usage. For the NN, `setupNNConnection` is the function that initialize the UDP connection to the NN script,  `getNNServerAdd` is the function where the UDP connectivity is configured and `predictWithNN` is used to send a new value to the NN and receive the prediction. 
+Regarding Online SVR, the first step is to initialize an [OnlineSVR](src/veins/modules/AI/OnlineSVR/OnlineSVR.cc) instance and define the parameters of the algorithm.
 
-The user can change the values of the parameters of the SVR from [RTM-CEB-ML.ini](examples/human/RTM-CEB-ML.ini): 
+```cpp
+SVR = new OnlineSVR();
+SVR->SetEpsilon(SVREpsilon);
+SVR->SetC(SVRC);
+SVR->SetKernelType(OnlineSVR::KERNEL_RBF);
+SVR->SetAutoErrorTollerance(false);
+SVR->SetVerbosity(OnlineSVR::VERBOSITY_NORMAL);
+```
+After initializing the algorithm, it shall be trained using `Train` function, and then, it is prepared to predict values with `Predict` function. The user can retrain it whenever it is necessary and, in addition, the less relevant samples can also be removed from the training process with the `Forget` function. All of them are implemented in the OnlineSVR module, but we have implemented an example in [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc), where `setupSVR` initialises a new OnlineSVR instance and `predictWithSVRAndTrain` predicts a new value, retrains the algorithm, and if it has more samples than the limit stablished by the user, it forgets them.
 
-https://github.com/shahriarHasan09/PlatoonSAFE/blob/8d9fc19e99b50f2dba810309346066fd5460ecbf/examples/human/RTM-CEB-ML.ini#L370-L372
+The NN is defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py) and the users can change the structure (Lines 58-63), defining a different _tf.keras.Sequential_ network. In this script, the number of past samples used to predict (WD_SAMPLES Line 54), the optimizer (Line 64) or the learning rate (Line 57) can also be changed, but the code is only prepared to use a single prediction, therefore, the NN must give a single output (WD_PRED Line 55). `NNServerThread.py` is a thread that shall be called from outside (in this case, [`runSimNN.py`](examples/human/externalScripts/runSimNN.py))
+
+```python
+t1 = NNServerThread.thread_with_trace(target = NNServerThread.runNN)
+t1.start()
+```
+Once the thread is running, it opens a UDP socket port, it defines the NN that will be used and it waits until the PlatoonSAFE simulator sneds the input. After receiving the input, it will make a prediction (`nn.predict_on_batch(input)`), send it back to the PlatoonSAFE via socket and retrain the network (`model.train_on_batch`). This thread will continue doing this until the PlatoonSAFE sends something that does not fit as an input (in our case, a string "end"). In the simulator side, it is also necessary to connect to the NN through UDP. [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc) has two functions to help with this: `setupNNConnection` initialize the UDP connection to the NN script and `getNNServerAdd` returns the information of the NN UDP connection to be able to send information to it.
 
 In this case, we have used these ML algorithms to enhance an emergency braking strategy in a platooning scenario. The aim is to predict the optimal $\tau_{wait}$ for Synchronized Braking. For these, the last vehicle of the platoon will send `DelayMessage` whenever it receives a CAM message from the LV. The LV will receive the information of the delay that a message suffers to communicate from the first to the last vehicle and it will use it to predict the future delay, which will be set as $\tau_{wait}$, or time that platooning vehicles should wait to start braking all of them together.
 
