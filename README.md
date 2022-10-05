@@ -183,9 +183,9 @@ https://github.com/shahriarHasan09/PlatoonSAFE/blob/91788a2d884f27088104feb1d094
 - `Config RTM-SB-NN` RTM and synchronized braking are used during cruising and braking, respectively. `Neural Network` is used for predicting $\tau_{wait}$. In order to use `NN`, just set `*.node[*].prot.runNN` to `true`. Note that a pthon script is required to be executed in order to run NN (more details are provided below).
 
 ## Running the NN Algorithm ##
-NN algorithm is not integrated into PlatoonSAFE but it is connected to it using a UDP connection. Therefore, in order to run `Config RTM-SB-NN`, it is necessary to run the NN externaly first. 
+In PlatoonSAFE, a UDP connection is used to perform predictions using the NN algorithm implemented in an external library. Therefore, in order to run `Config RTM-SB-NN`, it is necessary to run the NN externaly first. 
 
-[`runSimNN.py`](examples/human/externalScripts/runSimNN.py) is the main script that runs the simulations using the NN defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py). It connects to PlatoonSAFE simulator via UDP to exchange communication delays in the LeadVehicle of the platoon and predict thefuture ones. This script is only prepared to run one scenario, but with multiple seeds. This script will run the simulations as a terminal command. If the user want to execute only the NN and start the simulator from OMNet++, `runSimNN.py` must be changed to something similar to this:
+[`runSimNN.py`](examples/human/externalScripts/runSimNN.py) is the main script that runs the simulations using the NN defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py). It connects to PlatoonSAFE simulator via UDP to exchange communication delays in the LV of the platoon and predict the future ones. The following script is only prepared to run one scenario, but with multiple seeds. This script runs the simulations from the command line. If the user wants to execute only the NN and start the simulator from OMNet++, `runSimNN.py` must be changed to something similar to this:
 
 ```` python
 import NNServerThread
@@ -404,7 +404,7 @@ Please refer to the [`contracts.txt`](src/veins/modules/application/platooning/r
 Implementation of ML Algorithms
 ===============================
 
-Two ML algorithms have been integrated into PlatoonSAFE, NN and Online SVR. NN is implemented in python ([NNServerThread.py](examples/human/externalScripts/NNServerThread.py)) and connected to PlatoonSAFE via UDP. Online SVR is a C++ module ([OnlineSVR](src/veins/modules/AI/OnlineSVR)). In addition, to facilitate the use of these two algorithms, all the functions have been collected into [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc).
+Two ML algorithms have been integrated into PlatoonSAFE, NN and Online SVR. NN is implemented in python ([NNServerThread.py](examples/human/externalScripts/NNServerThread.py)) and connected to PlatoonSAFE via UDP socket. Online SVR is a C++ module ([OnlineSVR](src/veins/modules/AI/OnlineSVR)). In addition, all the functions have been collected into [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc) to facilitate the use of these two algorithms.
 
 Regarding Online SVR, the first step is to initialize an [OnlineSVR](src/veins/modules/AI/OnlineSVR/OnlineSVR.cc) instance and define the parameters of the algorithm.
 
@@ -416,7 +416,7 @@ SVR->SetKernelType(OnlineSVR::KERNEL_RBF);
 SVR->SetAutoErrorTollerance(false);
 SVR->SetVerbosity(OnlineSVR::VERBOSITY_NORMAL);
 ```
-After initializing the algorithm, it shall be trained using `Train` function, and then, it is prepared to predict values with `Predict` function. The user can retrain it whenever it is necessary and, in addition, the less relevant samples can also be removed from the training process with the `Forget` function. All of them are implemented in the OnlineSVR module, but we have implemented an example in [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc), where `setupSVR` initialises a new OnlineSVR instance and `predictWithSVRAndTrain` predicts a new value, retrains the algorithm, and if it has more samples than the limit stablished by the user, it forgets them.
+After initializing the algorithm, it is trained using the `Train` function, and then, it is prepared to predict values with `Predict` function. The user can retrain it whenever it is necessary and, in addition, the less relevant samples can also be removed from the training process with the `Forget` function. All of them are implemented in the OnlineSVR module, but we have implemented an example in [AIAlgorithms.cc](src/veins/modules/AI/AIAlgorithms.cc), where `setupSVR` initialises a new OnlineSVR instance and `predictWithSVRAndTrain` predicts a new value, retrains the algorithm, and if it has more samples than the limit stablished by the user, it forgets them.
 
 The NN is defined in [`NNServerThread.py`](examples/human/externalScripts/NNServerThread.py) and the users can change the structure (Lines 58-63), defining a different _tf.keras.Sequential_ network. In this script, the number of past samples used to predict (WD_SAMPLES Line 54), the optimizer (Line 64) or the learning rate (Line 57) can also be changed, but the code is only prepared to use a single prediction, therefore, the NN must give a single output (WD_PRED Line 55). `NNServerThread.py` is a thread that shall be called from outside (in this case, [`runSimNN.py`](examples/human/externalScripts/runSimNN.py))
 
