@@ -1,7 +1,31 @@
-# PlatoonSAFE User Guide
+# PlatoonSAFE User Manual (Version 0.1)
 
 S. Hasan, J. Gorospe, S. Girs, A. A. Gomez, and E. Uhlemann, “PlatoonSAFE: An Integrated Simulation Tool for Evaluating
 Platoon Safety with Fault Tolerance Mechanisms and ML Algorithms” in Proc. X, Y, Z, 2022.
+
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-baqh">Version no.</th>
+    <th class="tg-baqh">Date</th>
+    <th class="tg-baqh">Changes</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-baqh">PlatoonSAFE 0.1</td>
+    <td class="tg-baqh">2022/11/01</td>
+    <td class="tg-baqh">First version</td>
+  </tr>
+  <tr>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+  </tr>
+</tbody>
+</table>
+
+
 
 
 Introduction
