@@ -31,15 +31,13 @@ PlatoonSAFE Videos
 
 https://user-images.githubusercontent.com/93597343/198429943-087037cc-2b73-4f97-baf8-20c7ffbd8311.mp4
 
-
+<!---
 https://user-images.githubusercontent.com/93597343/198430751-30dfad55-9436-4ccf-ac8d-5e89f22d1f28.mp4
-
 
 https://user-images.githubusercontent.com/93597343/198430822-ecf1a8f0-abbb-4fc7-a4dd-f368e95f0c56.mp4
 
-
 https://user-images.githubusercontent.com/93597343/198430891-4e61367e-58cf-44b8-9088-1cd774082dfe.mp4
-
+-->
 
 
 Introduction
