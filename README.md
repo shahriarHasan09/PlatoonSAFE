@@ -26,9 +26,6 @@ Platoon Safety with Fault Tolerance Mechanisms and ML Algorithms” Jounral ABC.
 </table>
 
 
-PlatoonSAFE Videos
-==================
-
 https://user-images.githubusercontent.com/93597343/198429943-087037cc-2b73-4f97-baf8-20c7ffbd8311.mp4
 
 <!---
