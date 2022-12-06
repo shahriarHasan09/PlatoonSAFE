@@ -1,7 +1,7 @@
 # PlatoonSAFE User Manual (Version 0.1)
 
 S. Hasan, J. Gorospe, S. Girs, A. A. Gomez, and E. Uhlemann, “PlatoonSAFE: An Integrated Simulation Tool for Evaluating
-Platoon Safety with Fault Tolerance Mechanisms and ML Algorithms” Jounral ABC. X, Y, Z, 2022.
+Platoon Safety”, 2022.
 
 <table class="tg">
 <thead>
