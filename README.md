@@ -1,11 +1,10 @@
 # PlatoonSAFE User Manual (Version 0.1)
 
-This repository has been made public for the purpose of review of the following article submitted in the IEEE Open Journal of Intelligent Transportation Systems:
+❌ **This repository has been made public for the purpose of review of the following article submitted in the IEEE Open Journal of Intelligent Transportation Systems. We discourage the download and use of the PlatoonSAFE simulator until the corresponding article gets published.**
 
 S. Hasan, J. Gorospe, S. Girs, A. A. Gomez, and E. Uhlemann, “PlatoonSAFE: An Integrated Simulation Tool for Evaluating
 Platoon Safety”, 2022.
 
-We discourage the download and use of the PlatoonSAFE simulator until the corresponding article gets published.
 
 <table class="tg">
 <thead>
