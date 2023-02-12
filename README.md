@@ -266,7 +266,13 @@ cd src/examples/human/externalScripts/
 python3 runSimulations.py
 ```
 
-[`simUtils.py`](examples/human/externalScripts/simUtils.py) contains a function *createResultCSV* that converts resutls from PlatoonSAFE (`.vec`) into `.csv` files with the following structure: *ParameterName*, *VehicleID*, *SimulationTime*, *ParameterValue*. During this format conversion, the script also computes three important metrics required for analysing emergency braking strategies: inter-vehicle collisions, stopping distance of the LV, and the total time required for the whole platoon to transition to the fail-safe state from when braking started. [`resultsFromVec.py`](examples/human/externalScripts/resultsFromVec.py) contains an example of how this function can be used to extrac results from several vector files obtained after executing several simulations.
+[`simUtils.py`](examples/human/externalScripts/simUtils.py) contains a function *createResultCSV* that converts resutls from PlatoonSAFE (`.vec`) into `.csv` files with the following structure: *ParameterName*, *VehicleID*, *SimulationTime*, *ParameterValue*. During this format conversion, the script also computes three important metrics required for analysing emergency braking strategies: 
+1. inter-vehicle collisions, 
+2. stopping distance of the LV
+3. the total time required for the whole platoon to transition to the fail-safe state from when braking started. 
+4. Time to Collisions (TTC)
+
+[`resultsFromVec.py`](examples/human/externalScripts/resultsFromVec.py) contains an example of how this function can be used to extract results from several vector files obtained after executing several simulations. 
 
 [`errorPlot.py`](examples/human/externalScripts/errorPlot.py) is a script that shows how the performance of the ML algorithms can be evaluated. in order to replicate this script, it is necessary to extract csv files of the predicted delay and the error of the algorithms from the vector files. To do that:
 1. Open vector file in OMNet++
