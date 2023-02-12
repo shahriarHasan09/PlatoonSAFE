@@ -270,7 +270,6 @@ python3 runSimulations.py
 1. inter-vehicle collisions, 
 2. stopping distance of the LV
 3. the total time required for the whole platoon to transition to the fail-safe state from when braking started. 
-4. Time to Collisions (TTC)
 
 [`resultsFromVec.py`](examples/human/externalScripts/resultsFromVec.py) contains an example of how this function can be used to extract results from several vector files obtained after executing several simulations. 
 
