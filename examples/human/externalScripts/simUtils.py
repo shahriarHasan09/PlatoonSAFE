@@ -6,6 +6,7 @@ import subprocess
 import sys
 import simParam
 import re
+import time
 
 
 def changeValue(value, line, string, file="../RTM-CEB-ML.ini"):
@@ -40,11 +41,15 @@ def runSimulation(seed):
     """
     try:
         print("Running with command line arguments: %s" % ' '.join([simParam.SUMOCMD]))
+        
+        timeStarted = time.time()
         retcode = subprocess.call(simParam.SUMOCMD.format(seed), shell = True, cwd="../")
+        timeDelta = time.time() - timeStarted 
         if retcode < 0:
             print("Child was terminated by signal", -retcode, file=sys.stderr)
         else:
             print("Child returned", retcode, file=sys.stderr)
+        return timeDelta
     except OSError as e:
         print("Execution failed:", e, file=sys.stderr)
 

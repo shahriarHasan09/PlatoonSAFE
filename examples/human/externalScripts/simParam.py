@@ -66,6 +66,9 @@ WAITTIME_STR = "*.node[*].prot.sbWaitTime = {:.5f}s\n"
 DENMINT_LINE = 333 - 1
 DENMINT_STR = "*.node[*].prot.DENMInterval = {:.3f}s\n"
 
+GUI_LINE = 316 - 1
+GUI_STR = '*.manager.useGui = {:s}\n'
+
 """
 Definition of all input parameter different scenarios
 """
