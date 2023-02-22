@@ -36,7 +36,7 @@ def main():
         writer = csv.writer(csvFile)
         writer.writerow(["ID", "scenario", "seed", "Controller", "numPlatCars",
                         "numHumanCars", "spdLeader", "BeaconIntervalPlat", "BeaconIntervalHuman", "DENMInterval", "DecelerationRate",
-                         "PacketSize", "Ctr_Param(Ploegh||Spacing)", "Collision", "TravelDistance", "TravelTime"])
+                         "PacketSize", "Ctr_Param(Ploegh||Spacing)", "Collision", "TravelDistance", "TravelTime", "TTC", "MinGap"])
         csvFile.close()
         simUtils.changeValue(
             simParam.CONTROLLER_SCN, simParam.CONTROLLER_LINE, simParam.CONTROLLER_STR)
@@ -84,7 +84,7 @@ def main():
                 numTest += 1
                 vector_file = glob.glob("../results/*{}*#{}.vec".format(CONFIGURATION, seed))
                 # Parse vector file into a csv and check for collision
-                collision, travel_distance, travel_time = simUtils.createResultCSV(vector_file[0], simParam.parse_file.format(simParam.CONTROLLER_SCN, numTest, numTestScenario, seed), BRAKE_TIME, numCars)
+                collision, travel_distance, travel_time, ttc, min_gap = simUtils.createResultCSV(vector_file[0], simParam.parse_file.format(simParam.CONTROLLER_SCN, numTest, numTestScenario, seed), BRAKE_TIME, numCars)
 
                 os.system('rm -rf ../results/*')
 
@@ -92,7 +92,7 @@ def main():
                 csvFile = open("output/simulationResults.csv", "a", encoding='UTF8', newline='')
                 writer = csv.writer(csvFile)
                 writer.writerow([numTest, numTestScenario, seed, simParam.CONTROLLER_SCN, numCars, numHumanCars,
-                 spdLeadCar, beacint, beacinthum, beacint, decrate, packsize, ctr, collision, travel_distance, travel_time])
+                 spdLeadCar, beacint, beacinthum, beacint, decrate, packsize, ctr, collision, travel_distance, travel_time, ttc, min_gap])
                 csvFile.close()
 
     finally:
