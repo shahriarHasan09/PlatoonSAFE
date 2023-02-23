@@ -64,6 +64,24 @@ def getControllerScn(controller):
 
 
 def createResultCSV(vector_file, parse_file, start_brake_time, platoon_size):
+    """
+    Transform a .vec file into a CSV to facilitate processing recorded values.
+    While parsing, extract some valuable parameters
+
+    Input
+        - vector_file: str. Path of the vector file
+        - parse_file: str. Path for the CSV file to be saved.
+        - start_brake_time: float. Time in seconds when braking is defined in the simulations.
+        - platoon_size: int. Number of platooning cars simulated.
+
+
+    Output
+        - collision: Boolean indicating if any intervehicle collision occured
+        - travel_distance: float. The amount of meters the LV traveled since it start braking until it stops.
+        - travel_time: float. The amount of seconds needed to stop all the platooning vehicles since start_brake_time
+        - ttc (Time to collision): float. The amount of seconds passed when the first collision occurs since start_brake_time. False if no collisions.
+        - min_gap: float. The minimum gap in meters between platooning vehicles once they are stopped. -1 if collision.
+    """
     collision = False
     vectors_parsed = False
     dictionary = {}
@@ -92,27 +110,33 @@ def createResultCSV(vector_file, parse_file, start_brake_time, platoon_size):
                         
                         sim_time = float(a[2])
                         value = float(a[3])
+                        # Check min gap after 9.5 seconds from braking (we assume they aare all stopped)
                         if var_name == "distance" and node != 0:
-                            if sim_time > 69.5:
+                            if sim_time > (start_brake_time + 9.5):
                                 if value < min_gap:
                                     min_gap = value
+                        # Check when a collision occurs for each platoon vehicle (TTC). Only report the minimum TTC
                         if var_name == "distance" and value <= 0 and node != 0:
                             collision = True
                             col_time = sim_time - start_brake_time
                             if col_time < ttc:
                                 ttc = col_time
-                            
+                        # Check at what time has each vehicle stopped (speed < 0.01)
                         if var_name == "speed" and value < 0.01 and speed_0[node] != True:
                             speed_0[node] = True
                             if all(speed_0) == True:
                                 stop_time = sim_time
+                        # Check at which position starts braking and stops the LV
                         if var_name == "posx" and node == 0 and sim_time >= start_brake_time:
                             if start_distance == None:
                                 start_distance = value
                             stop_distance = value
 
+                        # Save variable name, platooning vehicle ID, simulation time and recorded value into the csv file.
                         out_line = f"{var_name}, {node}, {sim_time}, {value}\n"
                         output_file.writelines(out_line)
+
+
     travel_distance = stop_distance - start_distance
     travel_time = stop_time - start_brake_time
     if ttc == 1000:
