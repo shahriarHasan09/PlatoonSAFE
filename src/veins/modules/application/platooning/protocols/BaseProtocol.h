@@ -127,6 +127,8 @@ protected:
         //counter used for calculating avg delay
         int SBDelayCounter = 0;
 
+
+
         //Synchronized braking method
         void synchronizedBraking (double SBWaitTime);
         //Enhanced synchronized braking method; the vehicles perform slow deceleration during tau_wait
@@ -209,6 +211,9 @@ protected:
         cMessage* ackMsg3;
         cMessage* ackMsg2;
         cMessage* ackMsg1;
+
+        cMessage* timeOutMsg;
+        double CEBPTimeOut;
 
         cMessage* alagMsg;
         cMessage* leaderAdaptive;
