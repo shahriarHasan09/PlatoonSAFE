@@ -40,7 +40,7 @@ simple SimplePlatooningBeaconing extends BBaseProtocol
         bool isSynchronizedBraking = default(false);
         
         //Expected ACK delay in CEBP strategy
-	double CEBPTimeOut @unit("s") = default(3.0s);
+	double CEBPTimeOut @unit("s") = default(10.0s);
         
         double softDecelRate @unit("mpsps") = default(-1mpsps);
         bool isAEBEnabled = default(false);
