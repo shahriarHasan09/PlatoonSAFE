@@ -38,7 +38,9 @@ simple SimplePlatooningBeaconing extends BBaseProtocol
         double DENMInterval @unit("s") = default(0.01s);
         bool isCoopEmBrkEnabled = default(false);
         bool isSynchronizedBraking = default(false);
-
+        
+        //Expected ACK delay in CEBP strategy
+		double CEBPTimeOut @unit("s") = default(3.0s);
         
         double softDecelRate @unit("mpsps") = default(-1mpsps);
         bool isAEBEnabled = default(false);
