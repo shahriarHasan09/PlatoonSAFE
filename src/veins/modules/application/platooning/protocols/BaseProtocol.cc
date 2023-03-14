@@ -132,6 +132,7 @@ void BaseProtocol::initialize(int stage) {
         DENMInterval = par("DENMInterval").doubleValue();
         isSynchronizedBraking = par("isSynchronizedBraking");
         softDecelRate = par("softDecelRate").doubleValue();
+        CEBPTimeOut = par("CEBPTimeOut").doubleValue();
         isAEBEnabled = par("isAEBEnabled");
         isCEBPEnabled = par("isCEBPEnabled");
         isGDEnabled = par("isGDEnabled");
@@ -169,12 +170,12 @@ void BaseProtocol::initialize(int stage) {
         if (runSVR == true) {
             SVR = new OnlineSVR();
             // Set parameters
-            SVR->SetEpsilon(SVREpsilon);
-            SVR->SetC(SVRC);
-            SVR->SetKernelType(OnlineSVR::KERNEL_RBF);
-            SVR->SetAutoErrorTollerance(false);
-            SVR->SetVerbosity(OnlineSVR::VERBOSITY_NORMAL);
-            //setupSVR(SVREpsilon, SVRC, SVR);
+                            SVR->SetEpsilon(SVREpsilon);
+                            SVR->SetC(SVRC);
+                            SVR->SetKernelType(OnlineSVR::KERNEL_RBF);
+                            SVR->SetAutoErrorTollerance(false);
+                            SVR->SetVerbosity(OnlineSVR::VERBOSITY_NORMAL);
+                            //setupSVR(SVREpsilon, SVRC, SVR);
         }
 
         if (runNN == true) {
@@ -245,6 +246,8 @@ BaseProtocol::~BaseProtocol() {
     cancelAndDelete(ackMsg1);
     ackMsg1 = nullptr;
 
+    cancelAndDelete(timeOutMsg);
+    timeOutMsg = nullptr;
     cancelAndDelete(alagMsg);
     alagMsg = nullptr;
     cancelAndDelete(leaderAdaptive);
@@ -252,8 +255,7 @@ BaseProtocol::~BaseProtocol() {
     cancelAndDelete(hardDeceleration);
     hardDeceleration = nullptr;
 
-    sendto(cliSockDes, "end", 3, 0, (struct sockaddr*) &serAddr,
-            sizeof(serAddr));
+    sendto(cliSockDes, "end", 3, 0, (struct sockaddr*) &serAddr, sizeof(serAddr));
 }
 
 void BaseProtocol::handleSelfMsg(cMessage *msg) {
@@ -289,23 +291,25 @@ void BaseProtocol::handleSelfMsg(cMessage *msg) {
     else if (msg == brakingMessage) {
         //LV braking with the SB at tau_wait
         if (isSynchronizedBraking == true && synchCounter == 0) {
-            SBAvgWaitTime = SBTotalDelay / SBDelayCounter;
+            SBAvgWaitTime = SBTotalDelay/SBDelayCounter;
             synLVBrkMsg = new cMessage("synLVBrkMsg");
-            if (isSBwithAvgDelay) {
+            if (isSBwithAvgDelay){
                 scheduleAt(simTime() + SBAvgWaitTime, synLVBrkMsg);
-            } else {
+            }
+            else {
                 scheduleAt(simTime() + predictedDelayAtLV, synLVBrkMsg);
             }
             ++synchCounter;
         }
         //LV braking with the ESB strategy at soft deceleration rate and scheduling full deceleration at tau_wait
         if (isESynchBrkEnabled == true && synchCounter == 0) {
-            SBAvgWaitTime = SBTotalDelay / SBDelayCounter;
+            SBAvgWaitTime = SBTotalDelay/SBDelayCounter;
             traciVehicle->setFixedAcceleration(1, -softDecelRate);
             synLVBrkMsg = new cMessage("synLVBrkMsg");
-            if (isSBwithAvgDelay) {
+            if (isSBwithAvgDelay){
                 scheduleAt(simTime() + SBAvgWaitTime, synLVBrkMsg);
-            } else {
+            }
+            else {
                 scheduleAt(simTime() + predictedDelayAtLV, synLVBrkMsg);
             }
             ++synchCounter;
@@ -336,7 +340,7 @@ void BaseProtocol::handleSelfMsg(cMessage *msg) {
             || msg == startDecelerating6 || msg == startDecelerating7
             || msg == synBrkMsg || msg == ESynchMsg) {
         traciVehicle->setFixedAcceleration(1, -decelarationRate);
-        /*The ACK messages are repeated every DENM Interval as well. Required for AEB and CEBP strategies*/
+    /*The ACK messages are repeated every DENM Interval as well. Required for AEB and CEBP strategies*/
     } else if (msg == ackMsg6) {
         sendAckMessage(-1);
         scheduleAt(simTime() + DENMInterval, ackMsg6);
@@ -358,10 +362,8 @@ void BaseProtocol::handleSelfMsg(cMessage *msg) {
     }
     /*the platooning vehicles start soft deceleration if they have not started doing so already*/
     else if (msg == alagMsg) {
-        if (data.acceleration > softDecelRate && data.acceleration >= 0
-                && ackSet.count(positionHelper->getPosition()) == 0
-                && positionHelper->getPosition()
-                        != positionHelper->getPlatoonSize() - 1) {
+        if (data.acceleration > softDecelRate && data.acceleration >= 0 && ackSet.count(positionHelper->getPosition()) == 0
+            && positionHelper->getPosition() != positionHelper->getPlatoonSize() - 1) {
             traciVehicle->setFixedAcceleration(1, -softDecelRate);
         }
     }
@@ -372,6 +374,10 @@ void BaseProtocol::handleSelfMsg(cMessage *msg) {
     /*Hard deceleration upon reception of ACK messages*/
     else if (msg == hardDeceleration) {
         traciVehicle->setFixedAcceleration(1, -decelarationRate);
+    }
+    else if (msg == timeOutMsg){
+        traciVehicle->setFixedAcceleration(1, -decelarationRate);
+        sendAckMessage(-1);
     }
 }
 
@@ -562,9 +568,7 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
 
             /****************************SVR-jgorospe****************************/
             //if current vehicle is the last vehicle in the platoon
-            if (positionHelper->getPosition()
-                    == positionHelper->getPlatoonSize() - 1
-                    && simTime() < brakeAtTime) {
+            if (positionHelper->getPosition() == positionHelper->getPlatoonSize() - 1 && simTime() < brakeAtTime) {
                 /********TODO: Change to lastFrontMsgTime*********/
                 // delay experienced by the last vehicle
                 delay_us = delay.dbl();
@@ -579,8 +583,7 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
                 frontDelayOut.record(simTime() - lastFrontMsgTime);
                 frontDelayIdOut.record(myId);
 
-                frontTransmissionN.record(
-                        epkt->getSequenceNumber() - lastFrontMsgSeqN);
+                frontTransmissionN.record(epkt->getSequenceNumber() - lastFrontMsgSeqN);
             }
             lastFrontMsgTime = simTime();
             lastFrontMsgSeqN = epkt->getSequenceNumber();
@@ -603,25 +606,20 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
             delayMsgGenTime = delayPkt->getDelayMsgGenTime();
             sendRelayMessage(-1);
         } //the prediction of the delays happens at the LV
-        if (positionHelper->getPosition() == 0
-                && delayPkt->getDelayofLastVeh() != lastRecordedDelayAtLV) {
+        if (positionHelper->getPosition() == 0 && delayPkt->getDelayofLastVeh() != lastRecordedDelayAtLV) {
             realDelayOfLastVeh = delayPkt->getDelayofLastVeh();
             if (runSVR == true) { // predict with SVR
-                predictWithSVRAndTrain(&lastRecordedDelayAtLV,
-                        &predictedDelayAtLV, &PredErrorAtLV, realDelayOfLastVeh,
-                        SVRSizeLimit, SVR);
+                predictWithSVRAndTrain(&lastRecordedDelayAtLV, &predictedDelayAtLV, &PredErrorAtLV, realDelayOfLastVeh, SVRSizeLimit, SVR);
                 predictedDelayOut.record(predictedDelayAtLV);
                 predictionErrorOut.record(PredErrorAtLV);
             }
             if (runNN == true) { // predict with neural network
-                predictWithNN(cliSockDes, realDelayOfLastVeh, &numPrev, serAddr,
-                        &lastRecordedDelayAtLV, &predictedDelayAtLV,
-                        &PredErrorAtLV);
+                predictWithNN(cliSockDes, realDelayOfLastVeh, &numPrev, serAddr, &lastRecordedDelayAtLV, &predictedDelayAtLV, &PredErrorAtLV);
                 predictedDelayOut.record(predictedDelayAtLV);
                 predictionErrorOut.record(PredErrorAtLV);
             }
-            if (isSBwithAvgDelay) { //SB with Avg CAM delays
-                if (simTime() >= 10) {
+            if (isSBwithAvgDelay){ //SB with Avg CAM delays
+                if (simTime()>=10){
                     calculateSBAvgWaitTime(realDelayOfLastVeh);
                 }
             }
@@ -638,25 +636,20 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
 
         Plexe::VEHICLE_DATA data;
         traciVehicle->getVehicleData(&data);
-        if (positionHelper->getPosition() == 0
-                && relayPkt->getRelayedDelay() != lastRecordedDelayAtLV) {
+        if (positionHelper->getPosition() == 0 && relayPkt->getRelayedDelay() != lastRecordedDelayAtLV) {
             realDelayOfLastVeh = relayPkt->getRelayedDelay();
             if (runSVR == true) {
-                predictWithSVRAndTrain(&lastRecordedDelayAtLV,
-                        &predictedDelayAtLV, &PredErrorAtLV, realDelayOfLastVeh,
-                        SVRSizeLimit, SVR);
+                predictWithSVRAndTrain(&lastRecordedDelayAtLV, &predictedDelayAtLV, &PredErrorAtLV, realDelayOfLastVeh, SVRSizeLimit, SVR);
                 predictedDelayOut.record(predictedDelayAtLV);
                 predictionErrorOut.record(PredErrorAtLV);
             }
             if (runNN == true) {
-                predictWithNN(cliSockDes, realDelayOfLastVeh, &numPrev, serAddr,
-                        &lastRecordedDelayAtLV, &predictedDelayAtLV,
-                        &PredErrorAtLV);
+                predictWithNN(cliSockDes, realDelayOfLastVeh, &numPrev, serAddr, &lastRecordedDelayAtLV, &predictedDelayAtLV, &PredErrorAtLV);
                 predictedDelayOut.record(predictedDelayAtLV);
                 predictionErrorOut.record(PredErrorAtLV);
             }
-            if (isSBwithAvgDelay) {
-                if (simTime() >= 50) {
+            if (isSBwithAvgDelay){
+                if (simTime()>=50){
                     calculateSBAvgWaitTime(realDelayOfLastVeh);
                 }
             }
@@ -672,11 +665,9 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
         Plexe::VEHICLE_DATA data;
         traciVehicle->getVehicleData(&data);
         if (isRelayEnabled) {
-            if (positionHelper->getPosition() == platoonMidVehicleID
-                    && positionHelper->getPosition() != 0) {
+            if (positionHelper->getPosition() == platoonMidVehicleID && positionHelper->getPosition() != 0) {
                 relayedSBAvgWaitTime = brkPckt->getSynchBrkAvgWaitTime();
-                relayedPredictedDelayAtLV =
-                        brkPckt->getPredictedDelayOfLastVeh();
+                relayedPredictedDelayAtLV = brkPckt->getPredictedDelayOfLastVeh();
                 DENMGenTime = brkPckt->getBrakingTime();
                 DENM_seq_no = brkPckt->getSeqNumber();
                 //this is the relay of the DENMs obtained from the LV
@@ -685,27 +676,28 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
         }
 
         if (duplicateSet.count(positionHelper->getPosition())) { /*Whether the ego vehicle has already received a DENM*/
-        } else {
+        }
+        else {
             firstDENMDelay.record(simTime().dbl() - brkPckt->getBrakingTime());
             seqOutVector.record(brkPckt->getSeqNumber());
             duplicateSet.insert(positionHelper->getPosition());
 
             /*If SB, then schedule the braking at hazard detection time + waiting time*/
             if (isSynchronizedBraking) {
-                if (isSBwithAvgDelay) {
+                if (isSBwithAvgDelay){
                     synchronizedBraking(brkPckt->getSynchBrkAvgWaitTime());
-                } else {
+                }
+                else {
                     synchronizedBraking(brkPckt->getPredictedDelayOfLastVeh());
                 }
             }
             /*Synchronized braking with soft deceleration*/
             if (isESynchBrkEnabled) {
-                if (isSBwithAvgDelay) {
-                    EnhancedSynchronizedBraking(
-                            brkPckt->getSynchBrkAvgWaitTime());
-                } else {
-                    EnhancedSynchronizedBraking(
-                            brkPckt->getPredictedDelayOfLastVeh());
+                if (isSBwithAvgDelay){
+                    EnhancedSynchronizedBraking(brkPckt->getSynchBrkAvgWaitTime());
+                }
+                else {
+                    EnhancedSynchronizedBraking(brkPckt->getPredictedDelayOfLastVeh());
                 }
             }
             /*If AEB, and if the ego vehicle is the last vehicle, schedule a hard deceleration. If not, schedule soft deceleration*/
@@ -715,7 +707,8 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
             /*If CEBP, perform hard deceleration and schedule an ACK message*/
             else if (isCEBPEnabled) {
                 CooperativeBrakingProtocol();
-            } else if (isGDEnabled) {
+            }
+            else if (isGDEnabled){
                 traciVehicle->setFixedAcceleration(1, -decelarationRate);
             }
         }
@@ -729,37 +722,37 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
 
         if (positionHelper->getPosition() != 0) {
             if (duplicateSet.count(positionHelper->getPosition())) { /*Whether the ego vehicle has already received a DENM*/
-            } else {
-                firstDENMDelay.record(
-                        simTime().dbl() - RelDenPkt->getRelayedBrakingTime());
+            }
+            else {
+                firstDENMDelay.record(simTime().dbl() - RelDenPkt->getRelayedBrakingTime());
                 seqOutVector.record(RelDenPkt->getRelayedSeqNumber());
 
                 duplicateSet.insert(positionHelper->getPosition());
 
                 if (isSynchronizedBraking) { /*If SB, then schedule the braking at hazard detection time + waiting time*/
-                    if (isSBwithAvgDelay) {
-                        synchronizedBraking(
-                                RelDenPkt->getRelayedSBAvgWaitTime());
-                    } else {
-                        synchronizedBraking(
-                                RelDenPkt->getRelayedPredictedDelayOfLastVeh());
+                    if (isSBwithAvgDelay){
+                        synchronizedBraking(RelDenPkt->getRelayedSBAvgWaitTime());
+                    }
+                    else {
+                        synchronizedBraking(RelDenPkt->getRelayedPredictedDelayOfLastVeh());
                     }
                 }
-                if (isESynchBrkEnabled) { /*Synchronized braking with soft deceleration*/
-                    if (isSBwithAvgDelay) {
-                        EnhancedSynchronizedBraking(
-                                RelDenPkt->getRelayedSBAvgWaitTime());
-                    } else {
-                        EnhancedSynchronizedBraking(
-                                RelDenPkt->getRelayedPredictedDelayOfLastVeh());
+                if (isESynchBrkEnabled) {                 /*Synchronized braking with soft deceleration*/
+                    if (isSBwithAvgDelay){
+                        EnhancedSynchronizedBraking(RelDenPkt->getRelayedSBAvgWaitTime());
                     }
-                } else if (isAEBEnabled) {
+                    else {
+                        EnhancedSynchronizedBraking(RelDenPkt->getRelayedPredictedDelayOfLastVeh());
+                    }
+                }
+                else if (isAEBEnabled) {
                     adaptiveBraking();
                 }
                 /*If CEBP, perform hard deceleration and schedule an ACK message*/
                 else if (isCEBPEnabled) {
                     CooperativeBrakingProtocol();
-                } else if (isGDEnabled) {
+                }
+                else if (isGDEnabled){
                     traciVehicle->setFixedAcceleration(1, -decelarationRate);
                 }
             }
@@ -777,15 +770,16 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
 
         if (acknPkt->getIdOfVehicle() == positionHelper->getPosition() + 1) {
             if (ackSet.count(positionHelper->getPosition())) {
-                EV << positionHelper->getPosition() << " is already decelerated"
-                          << endl;
+                EV << positionHelper->getPosition() << " is already decelerated" << endl;
             } else {
-                firstAckDelay.record(
-                        (simTime().dbl() - brakeAtTime.dbl()) * 1000);
+                firstAckDelay.record((simTime().dbl() - brakeAtTime.dbl()) * 1000);
                 ackSet.insert(positionHelper->getPosition());
 
-                hardDeceleration = new cMessage("hardDeceleration");
-                scheduleAt(simTime(), hardDeceleration);
+                if (simTime() < brakeAtTime + CEBPTimeOut){
+                    hardDeceleration = new cMessage("hardDeceleration");
+                    scheduleAt(simTime(), hardDeceleration);
+                }
+
 
 //                if (positionHelper->getPosition()==6){
 //                    ackMsg6 = new cMessage("ackMsg6");
@@ -828,7 +822,9 @@ void BaseProtocol::handleUnicastMsg(UnicastMessage *unicast) {
     delete unicast;
 }
 
-void BaseProtocol::synchronizedBraking(double SBWaitTime) {
+
+
+void BaseProtocol::synchronizedBraking (double SBWaitTime){
     synBrkMsg = new cMessage("synBrkMsg");
     if (simTime() < brakeAtTime + SBWaitTime) {
         scheduleAt(brakeAtTime + SBWaitTime, synBrkMsg);
@@ -837,21 +833,21 @@ void BaseProtocol::synchronizedBraking(double SBWaitTime) {
     }
 }
 
-void BaseProtocol::EnhancedSynchronizedBraking(double SBWaitTime) {
+void BaseProtocol::EnhancedSynchronizedBraking (double SBWaitTime){
     ESynchMsg = new cMessage("ESynchMsg");
     if (positionHelper->getPosition() == positionHelper->getPlatoonSize() - 1) {
         traciVehicle->setFixedAcceleration(1, -decelarationRate);
     } else if (positionHelper->getPosition() != 0) {
         if (simTime() < brakeAtTime + SBWaitTime) {
             traciVehicle->setFixedAcceleration(1, -softDecelRate);
-            scheduleAt(brakeAtTime + SBWaitTime, ESynchMsg);
+            scheduleAt(brakeAtTime + SBWaitTime,ESynchMsg);
         } else {
             traciVehicle->setFixedAcceleration(1, -decelarationRate);
         }
     }
 }
 
-void BaseProtocol::adaptiveBraking() {
+void BaseProtocol::adaptiveBraking(){
     if (positionHelper->getPosition() == positionHelper->getPlatoonSize() - 1) {
         traciVehicle->setFixedAcceleration(1, -decelarationRate);
         ackMsg6 = new cMessage("ackMsg6");
@@ -862,15 +858,19 @@ void BaseProtocol::adaptiveBraking() {
     }
 }
 
-void BaseProtocol::CooperativeBrakingProtocol() {
+void BaseProtocol::CooperativeBrakingProtocol(){
     if (positionHelper->getPosition() == positionHelper->getPlatoonSize() - 1) {
         traciVehicle->setFixedAcceleration(1, -decelarationRate);
         ackMsg6 = new cMessage("ackMsg6");
         scheduleAt(simTime(), ackMsg6);
     }
+    else{
+        timeOutMsg = new cMessage("timeOutMsg");
+        scheduleAt(brakeAtTime + CEBPTimeOut, timeOutMsg);
+    }
 }
 
-void BaseProtocol::calculateSBAvgWaitTime(double SBDelay) {
+void BaseProtocol::calculateSBAvgWaitTime (double SBDelay){
     SBTotalDelay += SBDelay;
     ++SBDelayCounter;
 }
