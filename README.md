@@ -3,7 +3,7 @@
 **The features of PlatoonSAFE, its configuration parameters and evaluation metrics, and example use cases are described in the following article:**
 
 S. Hasan, J. Gorospe, S. Girs, A. Alonso Gómez, and E. Uhlemann, “PlatoonSAFE: An Integrated Simulation Tool for Evaluating
-Platoon Safety”, in *IEEE Open Journal of Intelligent Transportation Systems*, early access, 2023.
+Platoon Safety”, in *IEEE Open Journal of Intelligent Transportation Systems*, vol. 4, pp. 325-347, 2023, doi: 10.1109/OJITS.2023.3271608.
 
 
 <table class="tg">
